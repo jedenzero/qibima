@@ -7,6 +7,7 @@
         "react-dom": "^18.2.0",
         "react-scripts": "^5.0.1",
         "react-router-dom": "^6.14.0",
+        "papaparse": "^5.5.3",
         "markdown-it": "^13.0.1",
         "markdown-it-footnote": "^3.0.3",
         "markdown-it-multimd-table": "^4.1.2",
