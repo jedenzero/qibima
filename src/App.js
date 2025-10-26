@@ -156,7 +156,7 @@ function CourseHome(){
                 {courseTitles.map((el, index)=>
                     <React.Fragment key={index}>
                         {(index == 0 || el['단원'] !== courseTitles[index - 1]['단원']) && <div className="section">{el['단원']}</div>}
-                        <div className="step">{el['단계']}<BookIcon style={{ fontSize: 16 }} onClick={() => navigate(`/${currentCourse}/${el['단계']}/lesson`)} /><QuizIcon style={{ fontSize: 16 }} navigate(`/${currentCourse}/${el['단계']}/test`)} /></div>
+                        <div className="step">{el['단계']}<BookIcon className="lesson" onClick={() => navigate(`/${currentCourse}/${el['단계']}/lesson`)} /><QuizIcon className="test" onClick={() => navigate(`/${currentCourse}/${el['단계']}/test`)} /></div>
                     </React.Fragment>
                 )}
             </div>
