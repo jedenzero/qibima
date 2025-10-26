@@ -120,7 +120,7 @@ function ChooseFirstCourse(){
 function CourseHome(){
     const navigate = useNavigate();
     const courseCode = useParams()['courseCode'];
-    const { currentCourse, courses, setCourse } = useContext(Context);
+    const { currentCourse, courses, course, setCourse } = useContext(Context);
     const [courseTitles, setCourseTitles] = useState([]);
     const courseInfo = courses ? courses.find(el => el['코드'] == currentCourse) : null;
     
