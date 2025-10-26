@@ -5,10 +5,10 @@ import MarkdownIt from "markdown-it";
 import markdownItFootnote from "markdown-it-footnote";
 import markdownItMultimdTable from "markdown-it-multimd-table";
 import markdownItContainer from "markdown-it-container";
-import BookIcon from '@mui/icons-material/Book';
-import QuizIcon from '@mui/icons-material/Quiz';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import LicenseIcon from '@mui/icons-material/License';
+import BookSharpIcon from '@mui/icons-material/BookSharp';
+import QuizSharpIcon from '@mui/icons-material/QuizSharp';
+import ArrowBackSharpIcon from '@mui/icons-material/ArrowBackSharp';
+import WorkspacePremiumSharpIcon from '@mui/icons-material/WorkspacePremiumSharp';
 
 export const Context = createContext(null);
 
@@ -156,7 +156,7 @@ function CourseHome(){
                 {courseTitles.map((el, index)=>
                     <React.Fragment key={index}>
                         {(index == 0 || el['단원'] !== courseTitles[index - 1]['단원']) && <div className="section">{el['단원']}</div>}
-                        <div className="step">{el['단계']}<BookIcon className="lesson" onClick={() => navigate(`/${currentCourse}/${el['단계']}/lesson`)} /><QuizIcon className="test" onClick={() => navigate(`/${currentCourse}/${el['단계']}/test`)} /></div>
+                        <div className="step">{el['단계']}<BookSharpIcon className="lesson" onClick={() => navigate(`/${currentCourse}/${el['단계']}/lesson`)} /><QuizSharpIcon className="test" onClick={() => navigate(`/${currentCourse}/${el['단계']}/test`)} /></div>
                     </React.Fragment>
                 )}
             </div>
