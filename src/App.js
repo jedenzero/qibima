@@ -120,6 +120,9 @@ function CourseHome(){
     const navigate = useNavigate();
     const courseCode = useParams()['courseCode'];
     const { currentCourse, courses, setCourse } = useContext(Context);
+    
+    if(!courses) return <div>불러오는 중...</div>;
+    
     const courseInfo = courses.find(el => el['코드'] == currentCourse);
     const [courseTitles, setCourseTitles] = useState([]);
     
