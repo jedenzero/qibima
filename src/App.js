@@ -121,11 +121,8 @@ function CourseHome(){
     const navigate = useNavigate();
     const courseCode = useParams()['courseCode'];
     const { currentCourse, courses, setCourse } = useContext(Context);
-    
-    if(!courses) return <div>불러오는 중...</div>;
-    
-    const courseInfo = courses.find(el => el['코드'] == currentCourse);
     const [courseTitles, setCourseTitles] = useState([]);
+    const courseInfo = courses ? courses.find(el => el['코드'] == currentCourse) : null;
     
     useEffect(() => {
         if(currentCourse !== courseCode){
@@ -134,6 +131,8 @@ function CourseHome(){
     }, [currentCourse, courseCode, navigate]);
     
     useEffect(() => {
+        if(!courseInfo) return;
+        
         async function loadCourse(){
             const response = await fetch(courseInfo['링크']);
             const text = await response.text();
@@ -150,6 +149,10 @@ function CourseHome(){
         }
         loadCourse();
     }, [courseInfo]);
+    
+    if(!course || !courseInfo || courseTitles.length === 0){
+        return <div>불러오는 중...</div>;
+    }
     
     return(
         <>
