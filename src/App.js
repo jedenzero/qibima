@@ -14,8 +14,8 @@ export const Context = createContext(null);
 
 export default function App() {
     const [currentCourse, setCurrentCourse] = useState(localStorage.getItem("현재 과정"));
-    const [courses, setCourses] = useState([]);
-    const [course, setCourse] = useState([]);
+    const [courses, setCourses] = useState(null);
+    const [course, setCourse] = useState(null);
     
     useEffect(() => {
         async function loadCourses(){
@@ -102,6 +102,7 @@ export default function App() {
 function ChooseFirstCourse(){
     const navigate = useNavigate();
     const { currentCourse, setCurrentCourse, courses } = useContext(Context);
+    if(!courses) return <div>불러오는 중...</div>;
     
     return(
         <>
