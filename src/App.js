@@ -27,6 +27,8 @@ export default function App() {
         loadCourses();
     }, []);
     
+    if(!courses) return <div>불러오는 중...</div>;
+    
     return(
         <Context.Provider value={{ currentCourse, setCurrentCourse, courses, course, setCourse}}>
             <Routes>
@@ -102,7 +104,6 @@ export default function App() {
 function ChooseFirstCourse(){
     const navigate = useNavigate();
     const { currentCourse, setCurrentCourse, courses } = useContext(Context);
-    if(!courses) return <div>불러오는 중...</div>;
     
     return(
         <>
