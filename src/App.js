@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef, createContext, useContext } from "react";
+ import React, { useState, useEffect, useRef, createContext, useContext } from "react";
 import { Routes, Route, Link, useParams, Navigate, useNavigate } from "react-router-dom";
-import Papa from "papaparse";
 import MarkdownIt from "markdown-it";
 import markdownItFootnote from "markdown-it-footnote";
 import markdownItMultimdTable from "markdown-it-multimd-table";
@@ -16,12 +15,21 @@ export default function App() {
     const [currentCourse, setCurrentCourse] = useState(localStorage.getItem("현재 과정"));
     const [courses, setCourses] = useState(null);
     const [course, setCourse] = useState(null);
+    const [stepNames, setStepNames] = useState([]);
     
     useEffect(() => {
         async function loadCourses(){
-            const response = await fetch("https://docs.google.com/spreadsheets/d/1CcvbnqTOcHrr6l8u1BooDwIwbu6g7HNYbGHsPeVgOUk/export?format=csv&gid=0");
-            const text = await response.text();
-            setCourses(Papa.parse(text, { header: true }).data.sort((a, b) => a['출발어'].localeCompare(b['출발어'])));
+            const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/1CcvbnqTOcHrr6l8u1BooDwIwbu6g7HNYbGHsPeVgOUk/values/코드%20목록?key=${process.env.REACT_APP_GSHEET_API_KEY}`);
+            const data = await response.json();
+            const tags = data.values[0];
+            const parsed = data.values.slice(1).map(row => {
+                let obj = {};
+                row.forEach((el, index) => {
+                    obj[tags[index]] = el;
+                });
+                return obj;
+            });
+            setCourses(parsed.sort((a, b) => a['출발어'].localeCompare(b['출발어'])));
         }
         
         loadCourses();
@@ -30,7 +38,7 @@ export default function App() {
     if(!courses) return <div>불러오는 중...</div>;
     
     return(
-        <Context.Provider value={{ currentCourse, setCurrentCourse, courses, course, setCourse}}>
+        <Context.Provider value={{ currentCourse, setCurrentCourse, courses, course, setCourse, stepNames, setStepNames}}>
             <Routes>
                 <Route
                     path="/"
@@ -121,8 +129,7 @@ function ChooseFirstCourse(){
 function CourseHome(){
     const navigate = useNavigate();
     const courseCode = useParams()['courseCode'];
-    const { currentCourse, courses, course, setCourse } = useContext(Context);
-    const [stepNames, setStepNames] = useState([]);
+    const { currentCourse, courses, course, setCourse, stepNames, setStepNames } = useContext(Context);
     const courseInfo = courses ? courses.find(el => el['코드'] == courseCode) : null;
     
     useEffect(() => {
@@ -134,12 +141,19 @@ function CourseHome(){
     }, [currentCourse, courseCode, navigate]);
     
     useEffect(() => {
-        if(!courseInfo) return;
+        if(!courseInfo || stepNames.length !== 0) return;
         
         async function loadCourse(){
-            const response = await fetch(courseInfo['링크']);
-            const text = await response.text();
-            const parsed = Papa.parse(text, { header: true }).data;
+            const response = await fetch(`${courseInfo['링크']}?key=${process.env.REACT_APP_GSHEET_API_KEY}`);
+            const data = await response.json();
+            const tags = data.values[0];
+            const parsed = data.values.slice(1).map(row => {
+                let obj = {};
+                row.forEach((el, index) => {
+                    obj[tags[index]] = el;
+                });
+                return obj;
+            });
             setCourse(parsed);
             let names = []
             parsed.forEach((row, index) => {
