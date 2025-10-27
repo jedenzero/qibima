@@ -119,7 +119,7 @@ function ChooseFirstCourse(){
             {courses.map((el, index) => (
                 <React.Fragment key={index}>
                     {(index ==0 || el['출발어'] !== courses[index - 1]['출발어']) && <div className="section">{el['출발어']}</div>}
-                    <div className="course" onClick={() => {localStorage.setItem("현재 과정", el['코드']); setCurrentCourse(`${el['코드']}`); navigate(`/${el['코드']}`)}}><img src={`/assets/flags/${el['코드'].split('-')[1]}.svg`} className="language-flag" alt={`${el['도착어']}의 상징기`} />{el['도착어']}</div>
+                    <div className="course" onClick={() => {localStorage.setItem("현재 과정", el['코드']); setCurrentCourse(`${el['코드']}`); navigate(`/${el['코드']}`)}}><img src={`/public/imgs/flags/${el['코드'].split('-')[1]}.svg`} className="language-flag" alt={`${el['도착어']}의 상징기`} />{el['도착어']}</div>
                 </React.Fragment>
             ))}
         </>
@@ -174,7 +174,7 @@ function CourseHome(){
     return(
         <>
             <div id="header">
-                <img src={`/assets/flags/${courseInfo['코드'].split('-')[1]}.svg`} className="language-flag" alt={`${courseInfo['도착어']}의 상징기`} />
+                <img src={`/public/imgs/flags/${courseInfo['코드'].split('-')[1]}.svg`} className="language-flag" alt={`${courseInfo['도착어']}의 상징기`} />
             </div>
             <div id="content">
                 {stepNames.map((el, index)=>
@@ -213,10 +213,10 @@ function Lesson(){
             </div>
             <div id="content">
                 {
-                    course.find(el => 
+                    md.render(course.find(el => 
                     el['유형'] == '설명' && 
                     el['단원'] == stepName.split('-')[0] && 
-                    el['단계'] == stepName.split('-')[1])?.['설명'] ?? "이 단계는 설명이 없습니다."
+                    el['단계'] == stepName.split('-')[1])?.['설명'] ?? "이 단계는 설명이 없습니다.")
                 }
             </div>
         </>
