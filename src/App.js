@@ -57,17 +57,17 @@ export default function App() {
                 <Route
                     path="/:courseCode/:stepName/lesson"
                     element={
-                        currentCourse
+                        currentCourse && course
                         ? <Lesson />
-                        : <Navigate to="/first" replace />
+                        : <Navigate to="/" replace />
                     }
                 />
                 <Route
                     path="/:courseCode/:stepName/test"
                     element={
-                        currentCourse
+                        currentCourse && course
                         ? <Test />
-                        : <Navigate to="/first" replace />
+                        : <Navigate to="/" replace />
                     }
                 />
                 <Route
@@ -121,10 +121,12 @@ function CourseHome(){
     const navigate = useNavigate();
     const courseCode = useParams()['courseCode'];
     const { currentCourse, courses, course, setCourse } = useContext(Context);
-    const [courseTitles, setCourseTitles] = useState([]);
-    const courseInfo = courses ? courses.find(el => el['코드'] == currentCourse) : null;
+    const [stepNames, setStepNames] = useState([]);
+    const courseInfo = courses ? courses.find(el => el['코드'] == courseCode) : null;
     
     useEffect(() => {
+        if(!currentCourse) return;
+        
         if(currentCourse !== courseCode){
             navigate("/");
         }
@@ -138,19 +140,19 @@ function CourseHome(){
             const text = await response.text();
             const parsed = Papa.parse(text, { header: true }).data;
             setCourse(parsed);
-            let titles = []
+            let names = []
             parsed.forEach((row, index) => {
                 const prev = parsed[index-1];
                 if(index == 0 || row['단계'] != prev['단계'] || row['단원'] != prev['단원']){
-                    titles.push({단원: row['단원'], 단계: row['단계']});
+                    names.push({단원: row['단원'], 단계: row['단계']});
                 }
             });
-            setCourseTitles(titles);
+            setStepNames(names);
         }
         loadCourse();
     }, [courseInfo]);
     
-    if(!course || !courseInfo || courseTitles.length === 0){
+    if(!course || !courseInfo || stepNames.length === 0){
         return <div>불러오는 중...</div>;
     }
     
@@ -160,10 +162,10 @@ function CourseHome(){
                 <img src={`/assets/flags/${courseInfo['코드'].split('-')[1]}.svg`} className="language-flag" alt={`${courseInfo['도착어']}의 상징기`} />
             </div>
             <div id="content">
-                {courseTitles.map((el, index)=>
+                {stepNames.map((el, index)=>
                     <React.Fragment key={index}>
-                        {(index == 0 || el['단원'] !== courseTitles[index - 1]['단원']) && <div className="section">{el['단원']}</div>}
-                        <div className="step">{el['단계']}<BookSharpIcon className="lesson" onClick={() => navigate(`/${currentCourse}/${el['단계']}/lesson`)} /><QuizSharpIcon className="test" onClick={() => navigate(`/${currentCourse}/${el['단계']}/test`)} /></div>
+                        {(index == 0 || el['단원'] !== stepNames[index - 1]['단원']) && <div className="section">{el['단원']}</div>}
+                        <div className="step">{el['단계']}<BookSharpIcon className="lesson" onClick={() => navigate(`/${currentCourse}/${el['단원']}-${el['단계']}/lesson`)} /><QuizSharpIcon className="test" onClick={() => navigate(`/${currentCourse}/${el['단원']}-${el['단계']}/test`)} /></div>
                     </React.Fragment>
                 )}
             </div>
@@ -172,8 +174,36 @@ function CourseHome(){
 }
 
 function Lesson(){
+    const navigate = useNavigate();
+    const { courseCode, stepName } = useParams();
+    const { currentCourse, course } = useContext(Context);
+    
+    useEffect(() => {
+        if(!currentCourse) return;
+        
+        if(currentCourse !== courseCode){
+            navigate("/");
+        }
+    }, [currentCourse, courseCode, navigate]);
+    
+    if(!course){
+        return <div>불러오는 중...</div>;
+    }
+    
     return(
         <>
+            <div id="header">
+                <ArrowBackSharpIcon id="back" onClick={() => navigate(`/${courseCode}`)} />
+                <div>{stepName}</div>
+            </div>
+            <div id="content">
+                {
+                    course.find(el => 
+                    el['유형'] == '설명' && 
+                    el['단원'] == stepName.split('-')[0] && 
+                    el['단계'] == stepName.split('-')[1])?.['설명'] ?? "이 단계는 설명이 없습니다.";
+                }
+            </div>
         </>
     );
 }
