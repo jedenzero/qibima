@@ -129,7 +129,7 @@ function ChooseFirstCourse(){
 function CourseHome(){
     const navigate = useNavigate();
     const courseCode = useParams()['courseCode'];
-    const { currentCourse, courses, course, setCourse, stepNames, setStepNames } = useContext(Context);
+				const { currentCourse, courses, course, setCourse, stepNames, setStepNames } = useContext(Context);
     const courseInfo = courses ? courses.find(el => el['코드'] == courseCode) : null;
     
     useEffect(() => {
@@ -192,6 +192,7 @@ function Lesson(){
     const navigate = useNavigate();
     const { courseCode, stepName } = useParams();
     const { currentCourse, course } = useContext(Context);
+				const md = new MarkdownIt();
     
     useEffect(() => {
         if(!currentCourse) return;
@@ -211,14 +212,14 @@ function Lesson(){
                 <ArrowBackSharpIcon id="back" onClick={() => navigate(`/${courseCode}`)} />
                 <div>{stepName}</div>
             </div>
-            <div id="content">
-                {
-                    md.render(course.find(el => 
+            <div id="content"
+                dangerouslySetInnerHTML={{
+                    __html: md.render(course.find(el => 
                     el['유형'] == '설명' && 
                     el['단원'] == stepName.split('-')[0] && 
                     el['단계'] == stepName.split('-')[1])?.['설명'] ?? "이 단계는 설명이 없습니다.")
-                }
-            </div>
+                }}
+            />
         </>
     );
 }
