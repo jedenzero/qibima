@@ -201,7 +201,7 @@ function Lesson(){
                     course.find(el => 
                     el['유형'] == '설명' && 
                     el['단원'] == stepName.split('-')[0] && 
-                    el['단계'] == stepName.split('-')[1])?.['설명'] ?? "이 단계는 설명이 없습니다.";
+                    el['단계'] == stepName.split('-')[1])?.['설명'] ?? "이 단계는 설명이 없습니다."
                 }
             </div>
         </>
