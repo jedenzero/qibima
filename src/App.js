@@ -116,12 +116,14 @@ function ChooseFirstCourse(){
     return(
         <>
             <div id="passage">처음으로 배울 언어를 선택하세요.</div>
-            {courses.map((el, index) => (
-                <React.Fragment key={index}>
-                    {(index ==0 || el['출발어'] !== courses[index - 1]['출발어']) && <div className="section">{el['출발어']}</div>}
-                    <div className="course" onClick={() => {localStorage.setItem("현재 과정", el['코드']); setCurrentCourse(`${el['코드']}`); navigate(`/${el['코드']}`)}}><img src={`/imgs/flags/${el['코드'].split('-')[1]}.svg`} className="language-flag" alt={`${el['도착어']}의 상징기`} />{el['도착어']}</div>
-                </React.Fragment>
-            ))}
+            <div id="content">
+                {courses.map((el, index) => (
+                    <React.Fragment key={index}>
+                        {(index ==0 || el['출발어'] !== courses[index - 1]['출발어']) && <div className="section">{el['출발어']}</div>}
+                        <div className="course" onClick={() => {localStorage.setItem("현재 과정", el['코드']); setCurrentCourse(`${el['코드']}`); navigate(`/${el['코드']}`)}}><img src={`/imgs/flags/${el['코드'].split('-')[1]}.svg`} className="language-flag" alt={`${el['도착어']}의 상징기`} />{el['도착어']}</div>
+                    </React.Fragment>
+                ))}
+            </div>
         </>
     );
 }
@@ -173,14 +175,14 @@ function CourseHome(){
     
     return(
         <>
-            <div id="header">
+            <div id="home-header">
                 <img src={`/imgs/flags/${courseInfo['코드'].split('-')[1]}.svg`} className="language-flag" alt={`${courseInfo['도착어']}의 상징기`} />
             </div>
             <div id="content">
                 {stepNames.map((el, index)=>
                     <React.Fragment key={index}>
                         {(index == 0 || el['단원'] !== stepNames[index - 1]['단원']) && <div className="section">{el['단원']}</div>}
-                        <div className="step">{el['단계']}<BookSharpIcon className="lesson" onClick={() => navigate(`/${currentCourse}/${el['단원']}-${el['단계']}/lesson`)} /><QuizSharpIcon className="test" onClick={() => navigate(`/${currentCourse}/${el['단원']}-${el['단계']}/test`)} /></div>
+                        <div className="step">{el['단계']}<div className="icon-container"><BookSharpIcon className="lesson" onClick={() => navigate(`/${currentCourse}/${el['단원']}-${el['단계']}/lesson`)} /><QuizSharpIcon className="test" onClick={() => navigate(`/${currentCourse}/${el['단원']}-${el['단계']}/test`)} /></div></div>
                     </React.Fragment>
                 )}
             </div>
@@ -208,9 +210,9 @@ function Lesson(){
     
     return(
         <>
-            <div id="header">
+            <div id="sub-header">
                 <ArrowBackSharpIcon id="back" onClick={() => navigate(`/${courseCode}`)} />
-                <div>{stepName}</div>
+                <div id="header-text">{stepName}</div>
             </div>
             <div id="content"
                 dangerouslySetInnerHTML={{
