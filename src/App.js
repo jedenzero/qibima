@@ -115,8 +115,8 @@ function ChooseFirstCourse(){
     
     return(
         <>
-            <div id="passage">처음으로 배울 언어를 선택하세요.</div>
             <div id="content">
+                <div id="passage">처음으로 배울 언어를 선택하세요.</div>
                 {courses.map((el, index) => (
                     <React.Fragment key={index}>
                         {(index ==0 || el['출발어'] !== courses[index - 1]['출발어']) && <div className="section">{el['출발어']}</div>}
