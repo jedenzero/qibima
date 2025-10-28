@@ -8,15 +8,18 @@ body{
 }
 
 #header{
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
     height: 50px;
 }
 
-#backward{
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    width: 50px;
-    height: 100%;
+#back{
+    width: 30px;
+}
+
+.language-flag{
+    height: 30px;
 }
 
 #progress-bar{
@@ -25,7 +28,7 @@ body{
 }
 
 #progress-bar-fill{
-    width: 60%;
+    width: 0;
     height: 100%;
     background-color: #CFD8DC;
 }
@@ -35,9 +38,51 @@ body{
     width: 325px;
 }
 
-#question{
+#passage{
+    font-weight: bold;
+}
+
+.course{
     display: flex;
     align-items: center;
+    padding: 0 10px;
+    height: 50px;
+    background-color: #E1F5FE80;
+    font-weight: bold;
+}
+
+.course:hover{
+    background-color: #E1F5FEBF;
+}
+
+.step{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    height: 50px;
+    background-color: #E1F5FE80;
+    font-weight: bold;
+}
+
+.step:hover{
+    background-color: #E1F5FEBF;
+}
+
+.icon-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 70px;
+}
+
+.lesson, .test{
+    width: 30px;
+}
+
+.option{
+    background-color: #ECEFF180;
+    color: #263238;
     outline: 1px solid #CFD8DC;
 }
 
@@ -57,16 +102,6 @@ body{
 
 .option.correct{
     background-color: #B9F6CA80;
-    color: #1B5E20;
-    outline: 1px solid #69F0AE;
-}
-
-.option.selected:hover{
-    background-color: #E1F5FEBF;
-}
-
-.option.correct{
-    background-color: #B9F6CA40;
     color: #1B5E20;
     outline: 1px solid #69F0AE;
 }
