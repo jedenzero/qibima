@@ -1,13 +1,15 @@
- import React, { useState, useEffect, useRef, createContext, useContext } from "react";
+import React, { useState, useEffect, useRef, createContext, useContext } from "react";
 import { Routes, Route, Link, useParams, Navigate, useNavigate } from "react-router-dom";
 import MarkdownIt from "markdown-it";
 import markdownItFootnote from "markdown-it-footnote";
 import markdownItMultimdTable from "markdown-it-multimd-table";
 import markdownItContainer from "markdown-it-container";
-import BookSharpIcon from '@mui/icons-material/BookSharp';
-import QuizSharpIcon from '@mui/icons-material/QuizSharp';
-import ArrowBackSharpIcon from '@mui/icons-material/ArrowBackSharp';
-import WorkspacePremiumSharpIcon from '@mui/icons-material/WorkspacePremiumSharp';
+import BookRoundedIcon from '@mui/icons-material/BookRounded';
+import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import WorkspacePremiumRoundedIcon from '@mui/icons-material/WorkspacePremiumRounded';
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import ChangeCircleRoundedIcon from '@mui/icons-material/ChangeCircleRounded';
 
 export const Context = createContext(null);
 
@@ -34,6 +36,13 @@ export default function App() {
         
         loadCourses();
     }, []);
+    
+    useEffect(() => {
+        if(courses && currentCourse && !courses.some(row => row['코드'] == currentCourse)){
+            localStorage.removeItem("현재 과정");
+            setCurrentCourse(null);
+        }
+    }, [courses, currentCourse]);
     
     if(!courses) return <div>불러오는 중...</div>;
     
@@ -115,8 +124,9 @@ function ChooseFirstCourse(){
     
     return(
         <>
+            <div id="brand-header"></div>
             <div id="content">
-                <div id="passage">처음으로 배울 언어를 선택하세요.</div>
+                <div id="passage">처음으로 배울 언어는</div>
                 {courses.map((el, index) => (
                     <React.Fragment key={index}>
                         {(index ==0 || el['출발어'] !== courses[index - 1]['출발어']) && <div className="section">{el['출발어']}</div>}
@@ -131,7 +141,7 @@ function ChooseFirstCourse(){
 function CourseHome(){
     const navigate = useNavigate();
     const courseCode = useParams()['courseCode'];
-				const { currentCourse, courses, course, setCourse, stepNames, setStepNames } = useContext(Context);
+    const { currentCourse, courses, course, setCourse, stepNames, setStepNames } = useContext(Context);
     const courseInfo = courses ? courses.find(el => el['코드'] == courseCode) : null;
     
     useEffect(() => {
@@ -177,12 +187,16 @@ function CourseHome(){
         <>
             <div id="home-header">
                 <img src={`/imgs/flags/${courseInfo['코드'].split('-')[1]}.svg`} className="language-flag" alt={`${courseInfo['도착어']}의 상징기`} />
+                <div className="icon-container">
+                    <AddRoundedIcon className="add" onClick={() => navigate('/add')}/>
+                    <ChangeCircleRoundedIcon className="switch" onClick={() => navigate('/switch')}/>
+                </div>
             </div>
             <div id="content">
                 {stepNames.map((el, index)=>
                     <React.Fragment key={index}>
                         {(index == 0 || el['단원'] !== stepNames[index - 1]['단원']) && <div className="section">{el['단원']}</div>}
-                        <div className="step">{el['단계']}<div className="icon-container"><BookSharpIcon className="lesson" onClick={() => navigate(`/${currentCourse}/${el['단원']}-${el['단계']}/lesson`)} /><QuizSharpIcon className="test" onClick={() => navigate(`/${currentCourse}/${el['단원']}-${el['단계']}/test`)} /></div></div>
+                        <div className="step">{el['단계']}<div className="icon-container"><BookRoundedIcon className="lesson" onClick={() => navigate(`/${currentCourse}/${el['단원']}-${el['단계']}/lesson`)} /><AssignmentRoundedIcon className="test" onClick={() => navigate(`/${currentCourse}/${el['단원']}-${el['단계']}/test`)} /></div></div>
                     </React.Fragment>
                 )}
             </div>
@@ -211,7 +225,7 @@ function Lesson(){
     return(
         <>
             <div id="sub-header">
-                <ArrowBackSharpIcon id="back" onClick={() => navigate(`/${courseCode}`)} />
+                <ArrowBackRoundedIcon id="back" onClick={() => navigate(`/${courseCode}`)} />
                 <div id="header-text">{stepName}</div>
             </div>
             <div id="content"
@@ -227,8 +241,28 @@ function Lesson(){
 }
 
 function Test(){
+    const navigate = useNavigate();
+    const { courseCode, stepName } = useParams();
+    const { currentCourse, course } = useContext(Context);
+    
+    useEffect(() => {
+        if(!currentCourse) return;
+        
+        if(currentCourse !== courseCode){
+            navigate("/");
+        }
+    }, [currentCourse, courseCode, navigate]);
+    
+    if(!course){
+        return <div>불러오는 중...</div>;
+    }
+    
     return(
         <>
+            <div id="sub-header">
+                <ArrowBackRoundedIcon id="back" onClick={() => navigate(`/${courseCode}`)} />
+                <div id="header-text">{stepName}</div>
+            </div>
         </>
     );
 }
