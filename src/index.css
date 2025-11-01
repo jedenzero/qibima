@@ -11,6 +11,7 @@ body{
 
 #brand-header{
     display: flex;
+    justify-content: space-between;
     align-items: center;
     padding: 0 20px;
     height: 50px;
@@ -18,6 +19,7 @@ body{
 
 #home-header{
     display: flex;
+    justify-content: space-between;
     align-items: center;
     padding: 0 20px;
     height: 50px;
@@ -104,9 +106,9 @@ body{
 
 .icon-container{
     display: flex;
+    gap: 25px;
     justify-content: space-between;
     align-items: center;
-    width: 70px;
 }
 
 .lesson, .test{
