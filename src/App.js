@@ -311,10 +311,10 @@ function Test(){
     }, [storageData, stepName]);
     
     useEffect(() => {
-        if(count == 0 && testSentences.length != 0){
+        if(count == 0 && testWords.length != 0 && testSentences.length != 0){
             setCount(1);
         }
-    }, [testSentences]);
+    }, [testWords, testSentences]);
     
     useEffect(() => {
         if(count == 0 || testWords.length == 0) return;
