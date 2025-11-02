@@ -17,6 +17,10 @@ body{
     height: 50px;
 }
 
+#logo{
+    height: 25px;
+}
+
 #home-header{
     display: flex;
     justify-content: space-between;
@@ -133,6 +137,13 @@ body{
 
 #meaning{
     font-size: 18px;
+}
+
+#option-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 250px;
 }
 
 .option{
