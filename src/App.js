@@ -270,7 +270,7 @@ function Test(){
         }
     }, [currentCourse, courseCode, navigate]);
     
-    if(!course  || !storageData?.['마지막 단계']){
+    if(!course){
         return <div>불러오는 중...</div>;
     }
     
