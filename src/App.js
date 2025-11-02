@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, createContext, useContext } from "react";
+import React, { useState, useEffect, useRef, createContext, useContext, useMemo } from "react";
 import { Routes, Route, Link, useParams, Navigate, useNavigate } from "react-router-dom";
 import MarkdownIt from "markdown-it";
 import markdownItFootnote from "markdown-it-footnote";
@@ -15,7 +15,13 @@ export const Context = createContext(null);
 
 export default function App() {
     const [currentCourse, setCurrentCourse] = useState(localStorage.getItem("현재 과정"));
+    const storageData = useMemo(() => {
+        return currentCourse ? JSON.parse(localStorage.getItem(currentCourse)) : null;
+    }, [currentCourse]);
     const [courses, setCourses] = useState(null);
+    const courseInfo = useMemo(() => {
+        return currentCourse && courses ? courses.find(el => el['코드'] == currentCourse) : null;
+    }, [courses, currentCourse]);
     const [course, setCourse] = useState(null);
     const [stepNames, setStepNames] = useState([]);
     
@@ -47,7 +53,7 @@ export default function App() {
     if(!courses) return <div>불러오는 중...</div>;
     
     return(
-        <Context.Provider value={{ currentCourse, setCurrentCourse, courses, course, setCourse, stepNames, setStepNames}}>
+        <Context.Provider value={{ currentCourse, setCurrentCourse, courses, courseInfo, course, setCourse, stepNames, setStepNames, storageData}}>
             <Routes>
                 <Route
                     path="/"
@@ -124,7 +130,9 @@ function ChooseFirstCourse(){
     
     return(
         <>
-            <div id="brand-header"></div>
+            <div id="brand-header">
+                <img src="/imgs/logo_navy.svg" className="logo" alt="키비마의 로고" />
+            </div>
             <div id="content">
                 <div id="passage">처음으로 배울 언어는</div>
                 {courses.map((el, index) => (
@@ -141,8 +149,7 @@ function ChooseFirstCourse(){
 function CourseHome(){
     const navigate = useNavigate();
     const courseCode = useParams()['courseCode'];
-    const { currentCourse, courses, course, setCourse, stepNames, setStepNames } = useContext(Context);
-    const courseInfo = courses ? courses.find(el => el['코드'] == courseCode) : null;
+    const { currentCourse, courses, courseInfo, course, setCourse, stepNames, setStepNames } = useContext(Context);
     
     useEffect(() => {
         if(!currentCourse) return;
@@ -207,8 +214,11 @@ function CourseHome(){
 function Lesson(){
     const navigate = useNavigate();
     const { courseCode, stepName } = useParams();
-    const { currentCourse, course } = useContext(Context);
-    const md = new MarkdownIt();
+    const { currentCourse, course, storageData } = useContext(Context);
+    const md = new MarkdownIt()
+    .use(markdownItFootnote)
+    .use(markdownItContainer)
+    .use(markdownItMultimdTable);
     
     useEffect(() => {
         if(!currentCourse) return;
@@ -221,6 +231,16 @@ function Lesson(){
     if(!course){
         return <div>불러오는 중...</div>;
     }
+    
+    useEffect(() => {
+        if(!storageData?.['마지막 단계']){
+            const newStorageData = {
+                ...(storageData ?? {}),
+                '마지막 단계': `${course[0]['단원']}-${course[0]['단계']}`,
+            };
+            localStorage.setItem(currentCourse, JSON.stringify(newStorageData));
+        }
+    }, [course, storageData]);
     
     return(
         <>
@@ -243,7 +263,14 @@ function Lesson(){
 function Test(){
     const navigate = useNavigate();
     const { courseCode, stepName } = useParams();
-    const { currentCourse, course } = useContext(Context);
+    const { currentCourse, courseInfo, course, storageData } = useContext(Context);
+    const UI = courseInfo['UI'] ? JSON.parse(courseInfo['UI']) : {};
+    const [testWords, setTestWords] = useState([]);
+    const [testSentences, setTestSentences] = useState([]);
+    const [count, setCount] = useState(0);
+    const [passageContent, setPassageContent] = useState(null);
+    const [testContent, setTestContent] = useState(null);
+    const [footButtonContent, setFootButtonContent] = useState(null);
     
     useEffect(() => {
         if(!currentCourse) return;
@@ -257,11 +284,59 @@ function Test(){
         return <div>불러오는 중...</div>;
     }
     
+    useEffect(() => {
+        const currentIndex = course.findIndex(row => `${row['단원']}-${row['단계']}` == stepName);
+        const latestIndex = course.findIndex(row => `${row['단원']}-${row['단계']}` == storageData['마지막 단계']);
+        let words = [];
+        
+        if(currentIndex > latestIndex){
+            words = course.filter(row =>
+                row['단원'] == stepName.split('-')[0] &&
+                row['단계'] == stepName.split('-')[1] &&
+            row['유형'] == '단어')
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 5);
+            setTestWords(words);
+        }
+        const sentences = course.filter(row =>
+            row['단원'] == stepName.split('-')[0] &&
+            row['단계'] == stepName.split('-')[1] &&
+        row['유형'] == '문장')
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 15-words.length);
+        setTestSentences(sentences);
+        setCount(1);
+    }, [storageData, stepName]);
+    
+    useEffect(() => {
+        if(count == 0) return;
+        
+        if(count <= testWords.length){
+            setPassageContent(UI['word-memo']);
+            setTestContent(`<div id="learning-card">
+                <div id="word">${testWords[count-1]['단어']}</div>
+                <div id="meaning">${testWords[count-1]['뜻']}</div>
+            </div>
+            <div id="option-container"></div>`);
+            setFootButtonContent('확인');
+        }
+    }, [count, testWords]);
+    
     return(
         <>
             <div id="sub-header">
                 <ArrowBackRoundedIcon id="back" onClick={() => navigate(`/${courseCode}`)} />
                 <div id="header-text">{stepName}</div>
+            </div>
+            <div id="progress-bar">
+                <div id="progress-bar-fill" style={{width: `${(count/15)*100}%`}}></div>
+            </div>
+            <div id="content">
+                <div id="passage">{passageContent}</div>
+                <div dangerouslySetInnerHTML={{ __html: testContent }}></div>
+                <div id="foot-button-container">
+                    <div id="foot-button" onClick={() => {if(count <= testWords.length){setCount(count+1)}}}>{footButtonContent}</div>
+                </div>
             </div>
         </>
     );
