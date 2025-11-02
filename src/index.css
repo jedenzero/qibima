@@ -62,7 +62,7 @@ body{
 }
 
 #content{
-    margin: 0 auto;
+    margin: 10px auto;
     width: max(325px, 80%);
 }
 
@@ -113,6 +113,26 @@ body{
 
 .lesson, .test{
     width: 30px;
+}
+
+#learning-card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    height: 150px;
+    border-radius: 10px;
+    outline: 1px solid #CFD8DC;
+}
+
+#word{
+    font-weight: bold;
+    font-size: 30px;
+}
+
+#meaning{
+    font-size: 18px;
 }
 
 .option{
