@@ -44,19 +44,6 @@ export default function App() {
     }, []);
     
     useEffect(() => {
-        if (!course || !currentCourse) return;
-        
-        if(!storageData?.['마지막 단계']){
-            const newStorageData = {
-                ...(storageData ?? {}),
-                '마지막 단계': `${course[0]['단원']}-${course[0]['단계']}`,
-            };
-            localStorage.setItem(currentCourse, JSON.stringify(newStorageData));
-            setStorageData(newStorageData);
-        }
-    }, [course, currentCourse]);
-    
-    useEffect(() => {
         if(courses && currentCourse && !courses.some(row => row['코드'] == currentCourse)){
             localStorage.removeItem("현재 과정");
             setCurrentCourse(null);
@@ -144,7 +131,7 @@ function ChooseFirstCourse(){
     return(
         <>
             <div id="brand-header">
-                <img src="/imgs/logo_navy.svg" className="logo" alt="키비마의 로고" />
+                <img src="/imgs/logo_navy.svg" id="logo" alt="키비마의 로고" />
             </div>
             <div id="content">
                 <div id="passage">처음으로 배울 언어는</div>
@@ -289,7 +276,7 @@ function Test(){
     
     useEffect(() => {
         const currentIndex = course.findIndex(row => `${row['단원']}-${row['단계']}` == stepName);
-        const latestIndex = course.findIndex(row => `${row['단원']}-${row['단계']}` == storageData['마지막 단계']);
+        const latestIndex = storageData['마지막 단계'] ? course.findIndex(row => `${row['단원']}-${row['단계']}` == storageData['마지막 단계']) : -1;
         let words = [];
         
         if(currentIndex > latestIndex){
@@ -311,19 +298,19 @@ function Test(){
     }, [storageData, stepName]);
     
     useEffect(() => {
-        if(count == 0 && testWords.length != 0 && testSentences.length != 0){
+        if(count == 0 && (testWords.length != 0 || testSentences.length != 0)){
             setCount(1);
         }
     }, [testWords, testSentences]);
     
     useEffect(() => {
-        if(count == 0 || testWords.length == 0) return;
+        if(count == 0 || testSentences.length == 0) return;
         
         if(count <= testWords.length){
             setPassageContent(UI['word-memo']);
             setTestContent(`<div id="learning-card">
                 <div id="word">${testWords[count-1]['단어']}</div>
-                <div id="meaning">${testWords[count-1]['뜻']}</div>
+                <div id="meaning">${testWords[count-1]['단어 뜻']}</div>
             </div>
             <div id="option-container"></div>`);
             setFootButtonContent('확인');
