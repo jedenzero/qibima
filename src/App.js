@@ -15,9 +15,9 @@ export const Context = createContext(null);
 
 export default function App() {
     const [currentCourse, setCurrentCourse] = useState(localStorage.getItem("현재 과정"));
-    const storageData = useMemo(() => {
-        return currentCourse ? JSON.parse(localStorage.getItem(currentCourse)) : null;
-    }, [currentCourse]);
+    const [storageData, setStorageData] = useState(() => {
+        return currentCourse ? JSON.parse(localStorage.getItem(currentCourse)) ?? {} : {};
+    });
     const [courses, setCourses] = useState(null);
     const courseInfo = useMemo(() => {
         return currentCourse && courses ? courses.find(el => el['코드'] == currentCourse) : null;
@@ -42,6 +42,19 @@ export default function App() {
         
         loadCourses();
     }, []);
+    
+    useEffect(() => {
+        if (!course || !currentCourse) return;
+        
+        if(!storageData?.['마지막 단계']){
+            const newStorageData = {
+                ...(storageData ?? {}),
+                '마지막 단계': `${course[0]['단원']}-${course[0]['단계']}`,
+            };
+            localStorage.setItem(currentCourse, JSON.stringify(newStorageData));
+            setStorageData(newStorageData);
+        }
+    }, [course, currentCourse]);
     
     useEffect(() => {
         if(courses && currentCourse && !courses.some(row => row['코드'] == currentCourse)){
@@ -232,16 +245,6 @@ function Lesson(){
         return <div>불러오는 중...</div>;
     }
     
-    useEffect(() => {
-        if(!storageData?.['마지막 단계']){
-            const newStorageData = {
-                ...(storageData ?? {}),
-                '마지막 단계': `${course[0]['단원']}-${course[0]['단계']}`,
-            };
-            localStorage.setItem(currentCourse, JSON.stringify(newStorageData));
-        }
-    }, [course, storageData]);
-    
     return(
         <>
             <div id="sub-header">
@@ -280,19 +283,9 @@ function Test(){
         }
     }, [currentCourse, courseCode, navigate]);
     
-    if(!course){
+    if(!course  || !storageData?.['마지막 단계']){
         return <div>불러오는 중...</div>;
     }
-    
-    useEffect(() => {
-        if(!storageData?.['마지막 단계']){
-            const newStorageData = {
-                ...(storageData ?? {}),
-                '마지막 단계': `${course[0]['단원']}-${course[0]['단계']}`,
-            };
-            localStorage.setItem(currentCourse, JSON.stringify(newStorageData));
-        }
-    }, [course, storageData]);
     
     useEffect(() => {
         const currentIndex = course.findIndex(row => `${row['단원']}-${row['단계']}` == stepName);
