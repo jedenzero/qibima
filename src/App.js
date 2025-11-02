@@ -285,6 +285,16 @@ function Test(){
     }
     
     useEffect(() => {
+        if(!storageData?.['마지막 단계']){
+            const newStorageData = {
+                ...(storageData ?? {}),
+                '마지막 단계': `${course[0]['단원']}-${course[0]['단계']}`,
+            };
+            localStorage.setItem(currentCourse, JSON.stringify(newStorageData));
+        }
+    }, [course, storageData]);
+    
+    useEffect(() => {
         const currentIndex = course.findIndex(row => `${row['단원']}-${row['단계']}` == stepName);
         const latestIndex = course.findIndex(row => `${row['단원']}-${row['단계']}` == storageData['마지막 단계']);
         let words = [];
@@ -305,11 +315,16 @@ function Test(){
         .sort(() => Math.random() - 0.5)
         .slice(0, 15-words.length);
         setTestSentences(sentences);
-        setCount(1);
     }, [storageData, stepName]);
     
     useEffect(() => {
-        if(count == 0) return;
+        if(count == 0 && testSentences.length != 0){
+            setCount(1);
+        }
+    }, [testSentences]);
+    
+    useEffect(() => {
+        if(count == 0 || testWords.length == 0) return;
         
         if(count <= testWords.length){
             setPassageContent(UI['word-memo']);
@@ -320,7 +335,7 @@ function Test(){
             <div id="option-container"></div>`);
             setFootButtonContent('확인');
         }
-    }, [count, testWords]);
+    }, [count, testWords, testSentences]);
     
     return(
         <>
