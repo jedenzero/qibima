@@ -320,8 +320,8 @@ function Test(){
             setPassageContent(UI['memo-word']);
             setTestContent(<>
             <div id="static-card">
-                <div id="word">{testWords[count-1]['단어']}</div>
-                <div id="meaning">{testWords[count-1]['단어 뜻']}</div>
+                <div id="word">{testWords[count]['단어']}</div>
+                <div id="meaning">{testWords[count]['단어 뜻']}</div>
             </div>
             <div id="option-container"></div>
             </>);
