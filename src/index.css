@@ -121,7 +121,7 @@ body{
     width: 30px;
 }
 
-#word-card{
+#static-card{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -136,7 +136,7 @@ body{
     height: 200px;
 }
 
-#sentence-card{
+#variable-card{
     box-sizing: border-box;
     margin-top: 10px;
     padding: 15px;
@@ -147,6 +147,10 @@ body{
 #word{
     font-weight: bold;
     font-size: 30px;
+}
+
+#sentence{
+    font-size: 18px;
 }
 
 #meaning{
