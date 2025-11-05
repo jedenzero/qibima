@@ -348,7 +348,7 @@ function Test(){
                         <div id="sentence">{testSentences[count-testWords.length]['문장']}</div>
                         <div id="meaning" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
                     </div>
-                    <textarea id="writing-area" value={input} onChange={(e) => setInput(e.target.value)}></textarea>
+                    <textarea id="writing-area" onChange={(e) => setInput(e.target.value)}></textarea>
                     </>);
                 }
                 else{
