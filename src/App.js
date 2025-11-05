@@ -37,7 +37,7 @@ export default function App() {
                 });
                 return obj;
             });
-            setCourses(parsed.sort((a, b) => a['출발어'].localeCompare(b['출발어'])));
+            setCourses(parsed);
         }
         
         loadCourses();
@@ -257,7 +257,12 @@ function Test(){
     const UI = courseInfo['UI'] ? JSON.parse(courseInfo['UI']) : {};
     const [testWords, setTestWords] = useState([]);
     const [testSentences, setTestSentences] = useState([]);
-    const [count, setCount] = useState(0);
+    const [count, setCount] = useState(null);
+    const [answer, setAnswer] = useState("");
+    const [input, setInput] = useState("");
+    const [check, setCheck] = useState(() => () => {});
+    const [correct, setCorrect] = useState(0);
+    const [next, setNext] = useState(false);
     const [passageContent, setPassageContent] = useState(null);
     const [testContent, setTestContent] = useState(null);
     const [footButtonContent, setFootButtonContent] = useState(null);
@@ -284,8 +289,7 @@ function Test(){
                 row['단원'] == stepName.split('-')[0] &&
                 row['단계'] == stepName.split('-')[1] &&
             row['유형'] == '단어')
-            .sort(() => Math.random() - 0.5)
-            .slice(0, 5);
+            .sort(() => Math.random() - 0.5);
             setTestWords(words);
         }
         const sentences = course.filter(row =>
@@ -298,22 +302,79 @@ function Test(){
     }, [storageData, stepName]);
     
     useEffect(() => {
-        if(count == 0 && (testWords.length != 0 || testSentences.length != 0)){
-            setCount(1);
+        if(count == null && (testWords.length != 0 || testSentences.length != 0)){
+            setCount(0);
         }
     }, [testWords, testSentences]);
     
     useEffect(() => {
-        if(count == 0 || testSentences.length == 0) return;
+        if(count == null || testSentences.length == 0) return;
         
         if(count <= testWords.length){
-            setPassageContent(UI['word-memo']);
-            setTestContent(`<div id="learning-card">
-                <div id="word">${testWords[count-1]['단어']}</div>
-                <div id="meaning">${testWords[count-1]['단어 뜻']}</div>
+            setPassageContent(UI['memo-word']);
+            setTestContent(<>
+            <div id="static-card">
+                <div id="word">{testWords[count-1]['단어']}</div>
+                <div id="meaning">{testWords[count-1]['단어 뜻']}</div>
             </div>
-            <div id="option-container"></div>`);
-            setFootButtonContent('확인');
+            <div id="option-container"></div>
+            </>);
+            setFootButtonContent(UI['check']);
+        }
+        else{
+            const randomRange = Math.floor(Math.random() * 15);
+            const randomLanguage = Math.floor(Math.random() * 3);
+            const randomType = Math.floor(Math.random() * 2);
+            
+            if(randomRange > count){
+                //범위: 단어
+                if(randomLanguage == 0){
+                    //출발어(번역문) 단답형
+                    const blankWords = testSentences[count-testWords.length]['문장 뜻 빈칸'].match(/\[([^\[\]]+)\]/g);
+                    const randomWord = blankWords[Math.floor(Math.random() * blankWords.length)];
+                    const regex = new RegExp(`(${randomWord.replace(/([\[\]])/g, '\\$1')})`);
+                    const blankSentence = testSentences[count-testWords.length]['문장 뜻 빈칸'].replace(regex, '<span class="blank">$1</span>').replace(/\[([^\[\]]+)\]/g, '$1');
+                    
+                    setAnswer(randomWord.replace(/([\[\]])/g, ''));
+                    setCheck(() => checkWord);
+                    setPassageContent(UI['write-word']);
+                    setTestContent(<>
+                    <div id="static-card">
+                        <div id="sentence">{testSentences[count-testWords.length]['문장']}</div>
+                        <div id="meaning" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
+                    </div>
+                    <textarea id="writing-area" value={input} onChange={(e) => setInput(e.target.value)}></textarea>
+                    </>);
+                }
+                else{
+                    //도착어
+                    if(randomType == 0){
+                        //선지형
+                        
+                    }
+                    else{
+                        //단답형
+                        const blankWords = testSentences[count-testWords.length]['문장 빈칸'].match(/\[([^\[\]]+)\]/g);
+                        const randomWord = blankWords[Math.floor(Math.random() * blankWords.length)];
+                        const regex = new RegExp(`(${randomWord.replace(/([\[\]])/g, '\\$1')})`);
+                        const blankSentence = testSentences[count-testWords.length]['문장 빈칸'].replace(regex, '<span class="blank">$1</span>').replace(/\[([^\[\]]+)\]/g, '$1');
+                        
+                        setAnswer(randomWord.replace(/([\[\]])/g, ''));
+                        setCheck(() => checkWord);
+                        setPassageContent(UI['write-word']);
+                        setTestContent(<>
+                        <div id="static-card">
+                            <div id="sentence" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
+                            <div id="meaning">{testSentences[count-testWords.length]['문장 뜻']}</div>
+                        </div>
+                        <textarea id="writing-area" value={input} onChange={(e) => setInput(e.target.value)}></textarea>
+                        </>);
+                    }
+                }
+            }
+            else{
+                //범위: 문장
+            }
         }
     }, [count, testWords, testSentences]);
     
@@ -324,17 +385,23 @@ function Test(){
                 <div id="header-text">{stepName}</div>
             </div>
             <div id="progress-bar">
-                <div id="progress-bar-fill" style={{width: `${(count/15)*100}%`}}></div>
+                <div id="progress-bar-fill" style={{width: count ? `${(count/15)*100}%` : '0'}}></div>
             </div>
             <div id="content">
                 <div id="passage">{passageContent}</div>
-                <div dangerouslySetInnerHTML={{ __html: testContent }}></div>
+                {testContent}
                 <div id="foot-button-container">
-                    <div id="foot-button" onClick={() => {if(count <= testWords.length){setCount(count+1)}}}>{footButtonContent}</div>
+                    <div id="foot-button" onClick={() => {if(count != null){if(count < testWords.length){setCount(count+1)}else{if(next){setCount(count+1)}else{check()}setNext(!next)}}}}>{footButtonContent}</div>
                 </div>
             </div>
         </>
     );
+}
+
+function checkWord(){
+    if(answer == input){
+        setCorrect(correct+1);
+    }
 }
 
 function AddCourse(){
