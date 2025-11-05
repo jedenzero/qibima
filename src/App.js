@@ -267,6 +267,12 @@ function Test(){
     const [testContent, setTestContent] = useState(null);
     const [footButtonContent, setFootButtonContent] = useState(null);
     
+    function checkWord(){
+        if(answer.trim() === input.trim()){
+            setCorrect(prev => prev+1);
+        }
+    }
+    
     useEffect(() => {
         if(!currentCourse) return;
         
@@ -310,7 +316,7 @@ function Test(){
     useEffect(() => {
         if(count == null || testSentences.length == 0) return;
         
-        if(count <= testWords.length){
+        if(count < testWords.length){
             setPassageContent(UI['memo-word']);
             setTestContent(<>
             <div id="static-card">
@@ -319,7 +325,6 @@ function Test(){
             </div>
             <div id="option-container"></div>
             </>);
-            setFootButtonContent(UI['check']);
         }
         else{
             const randomRange = Math.floor(Math.random() * 15);
@@ -378,6 +383,10 @@ function Test(){
         }
     }, [count, testWords, testSentences]);
     
+    useEffect(() => {
+        setFootButtonContent(next ? UI['next'] : UI['check']);
+    }, [next]);
+    
     return(
         <>
             <div id="sub-header">
@@ -391,17 +400,11 @@ function Test(){
                 <div id="passage">{passageContent}</div>
                 {testContent}
                 <div id="foot-button-container">
-                    <div id="foot-button" onClick={() => {if(count != null){if(count < testWords.length){setCount(count+1)}else{if(next){setCount(count+1)}else{check()}setNext(!next)}}}}>{footButtonContent}</div>
+                    <div id="foot-button" onClick={() => {if(count == null) return; if(count < testWords.length){setCount(prev => prev+1)}else{if(next){setCount(prev => prev+1); setNext(false)}else{check(); setNext(true)}}}}>{footButtonContent}</div>
                 </div>
             </div>
         </>
     );
-}
-
-function checkWord(){
-    if(answer == input){
-        setCorrect(correct+1);
-    }
 }
 
 function AddCourse(){
