@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, createContext, useContext, useMemo } from "react";
+import React, { useState, useEffect, useRef, createContext, useContext, useMemo, useCallback } from "react";
 import { Routes, Route, Link, useParams, Navigate, useNavigate } from "react-router-dom";
 import MarkdownIt from "markdown-it";
 import markdownItFootnote from "markdown-it-footnote";
@@ -269,6 +269,8 @@ function Test(){
     const [passageContent, setPassageContent] = useState(null);
     const [footButtonContent, setFootButtonContent] = useState(null);
     
+    const areaRef = useRef(null);
+    
     const checkWord = useCallback(() => {
         if(answer.trim() === input.trim()){
             setCorrect(prev => prev+1);
@@ -279,9 +281,15 @@ function Test(){
         }
     }, [answer, input]);
     
-    function checkSentence(){
-        
-    }
+    const checkSentence = useCallback(() => {
+        if(answer.trim() === input.trim()){
+            setCorrect(prev => prev+1);
+            setIsCorrect(true);
+        }
+        else{
+            setIsCorrect(false);
+        }
+    }, [answer, input]);
     
     function checkOption(){
         
@@ -352,7 +360,7 @@ function Test(){
                     
                     setBlankSentence(testSentences[count-testWords.length]['문장 뜻 빈칸'].replace(regex, '<span class="blank">$1</span>').replace(/\[([^\[\]]+)\]/g, '$1'));
                     setAnswer(randomWord.replace(/([\[\]])/g, ''));
-                    setCheck(() => checkWord);
+                    setCheck(() => () => checkWord());
                     setPassageContent(UI['write-word']);
                     setType('출발어 단어 단답형');
                 }
@@ -370,7 +378,7 @@ function Test(){
                         
                         setBlankSentence(testSentences[count-testWords.length]['문장 빈칸'].replace(regex, '<span class="blank">$1</span>').replace(/\[([^\[\]]+)\]/g, '$1'));
                         setAnswer(randomWord.replace(/([\[\]])/g, ''));
-                        setCheck(() => checkWord);
+                        setCheck(() => () => checkWord());
                         setPassageContent(UI['write-word']);
                         setType('도착어 단어 단답형');
                     }
@@ -406,6 +414,9 @@ function Test(){
     
     useEffect(() => {
         setFootButtonContent(next ? UI['next'] : UI['check']);
+        if(areaRef.current){
+            areaRef.current.value = "";
+        }
     }, [next]);
     
     return(
@@ -434,7 +445,7 @@ function Test(){
                         <div id="sentence">{testSentences[count-testWords.length]['문장']}</div>
                         <div id="meaning" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
                     </div>
-                    <textarea id="writing-area" className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)}></textarea>
+                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)}></textarea>
                     </>
                 }
                 {type == '도착어 단어 단답형' &&
@@ -443,7 +454,7 @@ function Test(){
                         <div id="sentence" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
                         <div id="meaning">{testSentences[count-testWords.length]['문장 뜻']}</div>
                     </div>
-                    <textarea id="writing-area" className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)}></textarea>
+                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)}></textarea>
                     </>
                 }
                 <div id="foot-button-container">
