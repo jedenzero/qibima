@@ -158,11 +158,17 @@ body{
 }
 
 .blank{
+    user-select: none;
     margin: 0 5px;
+    padding: 0 10px;
     border-radius: 5px;
     outline: 1px dashed #CFD8DC;
     color: #ffffff00;
     background-color: #ECEFF180;
+}
+
+.reveal .blank{
+    color: inherit;
 }
 
 #option-container{
@@ -197,13 +203,13 @@ body{
     background-color: #E1F5FEBF;
 }
 
-.option.correct{
+.reveal .option.correct{
     background-color: #B9F6CA40;
     color: #1B5E20;
     outline: 1px solid #69F0AE;
 }
 
-.option.correct:hover{
+.reveal .option.correct:hover{
     background-color: #B9F6CA80;
 }
 
@@ -220,6 +226,13 @@ body{
     color: inherit;
     font-size: inherit;
     font-family: inherit;
+    resize: none;
+}
+
+#writing-area.correct{
+    background-color: #B9F6CA40;
+    color: #1B5E20;
+    outline: 1px solid #69F0AE;
 }
 
 #input-container{
