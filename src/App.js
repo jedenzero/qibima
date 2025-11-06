@@ -261,6 +261,7 @@ function Test(){
     const [answer, setAnswer] = useState("");
     const [input, setInput] = useState("");
     const [check, setCheck] = useState(() => () => {});
+    const [isCorrect, setIsCorrect] = useState(null);
     const [correct, setCorrect] = useState(0);
     const [next, setNext] = useState(false);
     const [passageContent, setPassageContent] = useState(null);
@@ -270,7 +271,23 @@ function Test(){
     function checkWord(){
         if(answer.trim() === input.trim()){
             setCorrect(prev => prev+1);
+            setIsCorrect(true);
         }
+        else{
+            setIsCorrect(false);
+        }
+    }
+    
+    function checkSentence(){
+        
+    }
+    
+    function checkOption(){
+        
+    }
+    
+    function checkPiece(){
+        
     }
     
     useEffect(() => {
@@ -344,11 +361,11 @@ function Test(){
                     setCheck(() => checkWord);
                     setPassageContent(UI['write-word']);
                     setTestContent(<>
-                    <div id="static-card">
+                    <div id="static-card" className={`${next ? 'reveal' : ''}`}>
                         <div id="sentence">{testSentences[count-testWords.length]['문장']}</div>
                         <div id="meaning" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
                     </div>
-                    <textarea id="writing-area" onChange={(e) => setInput(e.target.value)}></textarea>
+                    <textarea id="writing-area" className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)}></textarea>
                     </>);
                 }
                 else{
@@ -368,17 +385,35 @@ function Test(){
                         setCheck(() => checkWord);
                         setPassageContent(UI['write-word']);
                         setTestContent(<>
-                        <div id="static-card">
+                        <div id="static-card" className={`${next ? 'reveal' : ''}`}>
                             <div id="sentence" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
                             <div id="meaning">{testSentences[count-testWords.length]['문장 뜻']}</div>
                         </div>
-                        <textarea id="writing-area" value={input} onChange={(e) => setInput(e.target.value)}></textarea>
+                        <textarea id="writing-area" className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)}></textarea>
                         </>);
                     }
                 }
             }
             else{
                 //범위: 문장
+                if(randomLanguage == 0){
+                    //출발어
+                    if(randomType == 0){
+                        //조합형
+                    }
+                    else{
+                        //서답형
+                    }
+                }
+                else{
+                    //도착어
+                    if(randomType == 0){
+                        //조합형
+                    }
+                    else{
+                        //서답형
+                    }
+                }
             }
         }
     }, [count, testWords, testSentences]);
