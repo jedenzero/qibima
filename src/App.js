@@ -267,7 +267,6 @@ function Test(){
     const [correct, setCorrect] = useState(0);
     const [next, setNext] = useState(false);
     const [passageContent, setPassageContent] = useState(null);
-    const [testContent, setTestContent] = useState(null);
     const [footButtonContent, setFootButtonContent] = useState(null);
     
     function checkWord(){
@@ -337,13 +336,6 @@ function Test(){
         
         if(count < testWords.length){
             setPassageContent(UI['memo-word']);
-            setTestContent(<>
-            <div id="static-card">
-                <div id="word">{testWords[count]['단어']}</div>
-                <div id="meaning">{testWords[count]['단어 뜻']}</div>
-            </div>
-            <div id="option-container"></div>
-            </>);
         }
         else{
             const randomRange = Math.floor(Math.random() * 15);
@@ -423,7 +415,16 @@ function Test(){
             </div>
             <div id="content">
                 <div id="passage">{passageContent}</div>
-                {type && type == '출발어 단어 단답형' &&
+                {type == null &&
+                    <>
+                        <div id="static-card">
+                            <div id="word">{testWords?.[count]?.['단어'] || ''}</div>
+                            <div id="meaning">{testWords?.[count]?.['단어 뜻'] || ''}</div>
+                        </div>
+                        <div id="option-container"></div>
+                    </>
+                }
+                {type == '출발어 단어 단답형' &&
                     <>
                     <div id="static-card" className={`${next ? 'reveal' : ''}`}>
                         <div id="sentence">{testSentences[count-testWords.length]['문장']}</div>
@@ -432,7 +433,7 @@ function Test(){
                     <textarea id="writing-area" className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)}></textarea>
                     </>
                 }
-                {type && type == '도착어 단어 단답형' &&
+                {type == '도착어 단어 단답형' &&
                     <>
                     <div id="static-card" className={`${next ? 'reveal' : ''}`}>
                         <div id="sentence" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
