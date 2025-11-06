@@ -258,6 +258,8 @@ function Test(){
     const [testWords, setTestWords] = useState([]);
     const [testSentences, setTestSentences] = useState([]);
     const [count, setCount] = useState(null);
+    const [type, setType] = useState(null);
+    const [blankSentence, setBlankSentence] = useState("");
     const [answer, setAnswer] = useState("");
     const [input, setInput] = useState("");
     const [check, setCheck] = useState(() => () => {});
@@ -355,18 +357,12 @@ function Test(){
                     const blankWords = testSentences[count-testWords.length]['문장 뜻 빈칸'].match(/\[([^\[\]]+)\]/g);
                     const randomWord = blankWords[Math.floor(Math.random() * blankWords.length)];
                     const regex = new RegExp(`(${randomWord.replace(/([\[\]])/g, '\\$1')})`);
-                    const blankSentence = testSentences[count-testWords.length]['문장 뜻 빈칸'].replace(regex, '<span class="blank">$1</span>').replace(/\[([^\[\]]+)\]/g, '$1');
                     
+                    setBlankSentence(testSentences[count-testWords.length]['문장 뜻 빈칸'].replace(regex, '<span class="blank">$1</span>').replace(/\[([^\[\]]+)\]/g, '$1'));
                     setAnswer(randomWord.replace(/([\[\]])/g, ''));
                     setCheck(() => checkWord);
                     setPassageContent(UI['write-word']);
-                    setTestContent(<>
-                    <div id="static-card" className={`${next ? 'reveal' : ''}`}>
-                        <div id="sentence">{testSentences[count-testWords.length]['문장']}</div>
-                        <div id="meaning" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
-                    </div>
-                    <textarea id="writing-area" className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)}></textarea>
-                    </>);
+                    setType('출발어 단어 단답형');
                 }
                 else{
                     //도착어
@@ -379,18 +375,12 @@ function Test(){
                         const blankWords = testSentences[count-testWords.length]['문장 빈칸'].match(/\[([^\[\]]+)\]/g);
                         const randomWord = blankWords[Math.floor(Math.random() * blankWords.length)];
                         const regex = new RegExp(`(${randomWord.replace(/([\[\]])/g, '\\$1')})`);
-                        const blankSentence = testSentences[count-testWords.length]['문장 빈칸'].replace(regex, '<span class="blank">$1</span>').replace(/\[([^\[\]]+)\]/g, '$1');
                         
+                        setBlankSentence(testSentences[count-testWords.length]['문장 빈칸'].replace(regex, '<span class="blank">$1</span>').replace(/\[([^\[\]]+)\]/g, '$1'));
                         setAnswer(randomWord.replace(/([\[\]])/g, ''));
                         setCheck(() => checkWord);
                         setPassageContent(UI['write-word']);
-                        setTestContent(<>
-                        <div id="static-card" className={`${next ? 'reveal' : ''}`}>
-                            <div id="sentence" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
-                            <div id="meaning">{testSentences[count-testWords.length]['문장 뜻']}</div>
-                        </div>
-                        <textarea id="writing-area" className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)}></textarea>
-                        </>);
+                        setType('도착어 단어 단답형');
                     }
                 }
             }
@@ -433,7 +423,24 @@ function Test(){
             </div>
             <div id="content">
                 <div id="passage">{passageContent}</div>
-                {testContent}
+                {type && type == '출발어 단어 단답형' &&
+                    <>
+                    <div id="static-card" className={`${next ? 'reveal' : ''}`}>
+                        <div id="sentence">{testSentences[count-testWords.length]['문장']}</div>
+                        <div id="meaning" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
+                    </div>
+                    <textarea id="writing-area" className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)}></textarea>
+                    </>
+                }
+                {type && type == '도착어 단어 단답형' &&
+                    <>
+                    <div id="static-card" className={`${next ? 'reveal' : ''}`}>
+                        <div id="sentence" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
+                        <div id="meaning">{testSentences[count-testWords.length]['문장 뜻']}</div>
+                    </div>
+                    <textarea id="writing-area" className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)}></textarea>
+                    </>
+                }
                 <div id="foot-button-container">
                     <div id="foot-button" onClick={() => {if(count == null) return; if(count < testWords.length){setCount(prev => prev+1)}else{if(next){setCount(prev => prev+1); setNext(false)}else{check(); setNext(true)}}}}>{footButtonContent}</div>
                 </div>
