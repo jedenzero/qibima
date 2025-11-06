@@ -360,7 +360,7 @@ function Test(){
                     //도착어
                     if(randomType == 0){
                         //선지형
-                        
+                        setType('도착어 단어 선지형');
                     }
                     else{
                         //단답형
@@ -382,18 +382,22 @@ function Test(){
                     //출발어
                     if(randomType == 0){
                         //조합형
+                        setType('출발어 문장 조합형');
                     }
                     else{
                         //서답형
+                        setType('출발어 문장 서답형');
                     }
                 }
                 else{
                     //도착어
                     if(randomType == 0){
                         //조합형
+                        setType('도착어 문장 조합형');
                     }
                     else{
                         //서답형
+                        setType('도착어 문장 서답형');
                     }
                 }
             }
