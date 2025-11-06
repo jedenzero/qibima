@@ -269,7 +269,7 @@ function Test(){
     const [passageContent, setPassageContent] = useState(null);
     const [footButtonContent, setFootButtonContent] = useState(null);
     
-    function checkWord(){
+    const checkWord = useCallback(() => {
         if(answer.trim() === input.trim()){
             setCorrect(prev => prev+1);
             setIsCorrect(true);
@@ -277,7 +277,7 @@ function Test(){
         else{
             setIsCorrect(false);
         }
-    }
+    }, [answer, input]);
     
     function checkSentence(){
         
