@@ -262,7 +262,6 @@ function Test(){
     const [blankSentence, setBlankSentence] = useState("");
     const [answer, setAnswer] = useState("");
     const [input, setInput] = useState("");
-    const [check, setCheck] = useState(() => () => {});
     const [isCorrect, setIsCorrect] = useState(null);
     const [correct, setCorrect] = useState(0);
     const [next, setNext] = useState(false);
@@ -271,32 +270,16 @@ function Test(){
     
     const areaRef = useRef(null);
     
-    const checkWord = useCallback(() => {
-        if(answer.trim() === input.trim()){
-            setCorrect(prev => prev+1);
-            setIsCorrect(true);
+    function check(){
+        if(type == '출발어 단어 단답형' || type == '도착어 단어 단답형'){
+            if(answer.trim() === input.trim()){
+                setCorrect(prev => prev+1);
+                setIsCorrect(true);
+            }
+            else{
+                setIsCorrect(false);
+            }
         }
-        else{
-            setIsCorrect(false);
-        }
-    }, [answer, input]);
-    
-    const checkSentence = useCallback(() => {
-        if(answer.trim() === input.trim()){
-            setCorrect(prev => prev+1);
-            setIsCorrect(true);
-        }
-        else{
-            setIsCorrect(false);
-        }
-    }, [answer, input]);
-    
-    function checkOption(){
-        
-    }
-    
-    function checkPiece(){
-        
     }
     
     useEffect(() => {
@@ -360,7 +343,6 @@ function Test(){
                     
                     setBlankSentence(testSentences[count-testWords.length]['문장 뜻 빈칸'].replace(regex, '<span class="blank">$1</span>').replace(/\[([^\[\]]+)\]/g, '$1'));
                     setAnswer(randomWord.replace(/([\[\]])/g, ''));
-                    setCheck(() => () => checkWord());
                     setPassageContent(UI['write-word']);
                     setType('출발어 단어 단답형');
                 }
@@ -378,7 +360,6 @@ function Test(){
                         
                         setBlankSentence(testSentences[count-testWords.length]['문장 빈칸'].replace(regex, '<span class="blank">$1</span>').replace(/\[([^\[\]]+)\]/g, '$1'));
                         setAnswer(randomWord.replace(/([\[\]])/g, ''));
-                        setCheck(() => () => checkWord());
                         setPassageContent(UI['write-word']);
                         setType('도착어 단어 단답형');
                     }
@@ -414,7 +395,7 @@ function Test(){
     
     useEffect(() => {
         setFootButtonContent(next ? UI['next'] : UI['check']);
-        if(areaRef.current){
+        if(next == false && areaRef.current){
             areaRef.current.value = "";
         }
     }, [next]);
