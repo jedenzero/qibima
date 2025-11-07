@@ -279,6 +279,14 @@ function Test(){
             else{
                 setIsCorrect(false);
             }
+            if(type == '출발어 문장 서답형' || type == '도착어 문장 서답형'){
+            if(answer.trim().replace(/[₩.₩,₩?₩!₩:₩-~"'‘’“”«»]/g, '') === input.trim().replace(/[₩.₩,₩?₩!₩:₩-~"'‘’“”«»]/g, '')){
+                setCorrect(prev => prev+1);
+                setIsCorrect(true);
+            }
+            else{
+                setIsCorrect(false);
+            }
         }
     }
     
@@ -430,6 +438,24 @@ function Test(){
                     </>
                 }
                 {type == '도착어 단어 단답형' &&
+                    <>
+                    <div id="static-card" className={`${next ? 'reveal' : ''}`}>
+                        <div id="sentence" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
+                        <div id="meaning">{testSentences[count-testWords.length]['문장 뜻']}</div>
+                    </div>
+                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)}></textarea>
+                    </>
+                }
+                {type == '출발어 문장 서답형' &&
+                    <>
+                    <div id="static-card" className={`${next ? 'reveal' : ''}`}>
+                        <div id="sentence">{testSentences[count-testWords.length]['문장']}</div>
+                        <div id="meaning" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
+                    </div>
+                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)}></textarea>
+                    </>
+                }
+                {type == '도착어 문장 서답형' &&
                     <>
                     <div id="static-card" className={`${next ? 'reveal' : ''}`}>
                         <div id="sentence" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
