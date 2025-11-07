@@ -383,8 +383,9 @@ function Test(){
                         setType('출발어 문장 조합형');
                     }
                     else{
-                        setAnswer(testSentences[count-testWords.length]['문장 뜻']);
                         //서답형
+                        setAnswer(testSentences[count-testWords.length]['문장 뜻']);
+                        setPassageContent(UI['write-sentence']);
                         setType('출발어 문장 서답형');
                     }
                 }
@@ -397,6 +398,7 @@ function Test(){
                     else{
                         //서답형
                         setAnswer(testSentences[count-testWords.length]['문장']);
+                        setPassageContent(UI['write-sentence']);
                         setType('도착어 문장 서답형');
                     }
                 }
