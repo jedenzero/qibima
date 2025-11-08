@@ -342,6 +342,9 @@ function Test(){
     }, [testWords, testSentences]);
     
     useEffect(() => {
+        setAnswer('');
+        setInput('');
+        
         if(count == null || testSentences.length == 0) return;
         
         if(count < testWords.length){
@@ -373,7 +376,7 @@ function Test(){
                         const randomWordBracket = blankWords[Math.floor(Math.random() * blankWords.length)];
                         const regex = new RegExp(`(${randomWordBracket.replace(/([\[\]])/g, '\\$1')})`);
                         const randomWord = randomWordBracket.replace(/([\[\]])/g, '');
-                        const optionWords = [];
+                        let optionWords = [];
                         
                         for (const [index, row] of course.entries()){
                             const prev = course[index-1] || row;
@@ -384,10 +387,11 @@ function Test(){
                             }
                         }
                         
+                        optionWords = optionWords.sort(() => Math.random() - 0.5);
                         optionWords.push(randomWord);
                         
                         setBlankSentence(testSentences[count-testWords.length]['문장 빈칸'].replace(regex, '<span class="blank">$1</span>').replace(/\[([^\[\]]+)\]/g, '$1'));
-                        setOptions(optionWords.sort(() => Math.random() - 0.5).slice(0, 3));
+                        setOptions(optionWords.sort(() => Math.random() - 0.5));
                         setAnswer(randomWord);
                         setType('도착어 단어 선지형');
                     }
@@ -489,7 +493,7 @@ function Test(){
                     </div>
                     <div id="option-container">
                         {options.map(el =>
-                            <div key={el} className={`option${el == input ? ' selected' : ''}${el == answer ? ' correct' : ''}`} onClick={() => setInput(el)}>{el}</div>
+                            <div key={el} className={`option${(next == false && el == input) || (next == true && el != answer && el == input) ? ' selected' : ''}${next == true && el == answer ? ' correct' : ''}`} onClick={() => {if(next == false){setInput(el)}}}>{el}</div>
                         )}
                     </div>
                     </>
