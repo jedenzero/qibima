@@ -387,12 +387,13 @@ function Test(){
                             }
                         }
                         
-                        optionWords = optionWords.sort(() => Math.random() - 0.5);
+                        optionWords = optionWords.sort(() => Math.random() - 0.5).slice(0, 2);
                         optionWords.push(randomWord);
                         
                         setBlankSentence(testSentences[count-testWords.length]['문장 빈칸'].replace(regex, '<span class="blank">$1</span>').replace(/\[([^\[\]]+)\]/g, '$1'));
                         setOptions(optionWords.sort(() => Math.random() - 0.5));
                         setAnswer(randomWord);
+                        setPassageContent(UI['select-word']);
                         setType('도착어 단어 선지형');
                     }
                     else{
@@ -473,7 +474,7 @@ function Test(){
                         <div id="sentence">{testSentences[count-testWords.length]['문장']}</div>
                         <div id="meaning" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
                     </div>
-                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)}></textarea>
+                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)} readOnly={next}></textarea>
                     </>
                 }
                 {type == '도착어 단어 단답형' &&
@@ -482,7 +483,7 @@ function Test(){
                         <div id="sentence" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
                         <div id="meaning">{testSentences[count-testWords.length]['문장 뜻']}</div>
                     </div>
-                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)}></textarea>
+                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)} readOnly={next}></textarea>
                     </>
                 }
                 {type == '도착어 단어 선지형' &&
@@ -504,7 +505,7 @@ function Test(){
                         <div id="sentence">{testSentences[count-testWords.length]['문장']}</div>
                         <div id="meaning"><span className="blank">{testSentences[count-testWords.length]['문장 뜻']}</span></div>
                     </div>
-                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)}></textarea>
+                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)} readOnly={next}></textarea>
                     </>
                 }
                 {type == '도착어 문장 서답형' &&
@@ -513,7 +514,7 @@ function Test(){
                         <div id="sentence"><span className="blank">{testSentences[count-testWords.length]['문장']}</span></div>
                         <div id="meaning">{testSentences[count-testWords.length]['문장 뜻']}</div>
                     </div>
-                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)}></textarea>
+                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)} readOnly={next}></textarea>
                     </>
                 }
                 <div id="foot-button-container">
