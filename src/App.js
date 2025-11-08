@@ -342,9 +342,6 @@ function Test(){
     }, [testWords, testSentences]);
     
     useEffect(() => {
-        setAnswer('');
-        setInput('');
-        
         if(count == null || testSentences.length == 0) return;
         
         if(count < testWords.length){
@@ -382,7 +379,7 @@ function Test(){
                             const prev = course[index-1] || row;
                             if((row['단원'] != stepName.split('-')[0] || row['단계'] != stepName.split('-')[1]) &&
                             prev['단원'] == stepName.split('-')[0] && prev['단계'] == stepName.split('-')[1]) break;
-                            if(row['단어'] != randomWord){
+                            if(row['유형'] == '단어' && row['단어'] != randomWord){
                                 optionWords.push(row['단어']);
                             }
                         }
@@ -447,6 +444,10 @@ function Test(){
             areaRef.current.value = "";
         }
     }, [next]);
+    
+    useEffect(() => {
+        setInput('');
+    }, [type]);
     
     return(
         <>
