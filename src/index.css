@@ -203,14 +203,10 @@ body{
     background-color: #E1F5FEBF;
 }
 
-.reveal .option.correct{
+.option.correct{
     background-color: #B9F6CA40;
     color: #1B5E20;
     outline: 1px solid #69F0AE;
-}
-
-.reveal .option.correct:hover{
-    background-color: #B9F6CA80;
 }
 
 #writing-area{
