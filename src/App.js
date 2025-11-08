@@ -260,6 +260,7 @@ function Test(){
     const [count, setCount] = useState(null);
     const [type, setType] = useState(null);
     const [blankSentence, setBlankSentence] = useState("");
+    const [options, setOptions] = useState([]);
     const [answer, setAnswer] = useState("");
     const [input, setInput] = useState("");
     const [isCorrect, setIsCorrect] = useState(null);
@@ -282,6 +283,15 @@ function Test(){
         }
         if(type == '출발어 문장 서답형' || type == '도착어 문장 서답형'){
             if(answer.trim().replace(/[\-.,?!:~"'‘’“”«»]/g, '') === input.trim().replace(/[\-.,?!:~"'‘’“”«»]/g, '')){
+                setCorrect(prev => prev+1);
+                setIsCorrect(true);
+            }
+            else{
+                setIsCorrect(false);
+            }
+        }
+        if(type == '도착어 단어 선지형'){
+            if(answer == input){
                 setCorrect(prev => prev+1);
                 setIsCorrect(true);
             }
@@ -359,6 +369,26 @@ function Test(){
                     //도착어
                     if(randomType == 0){
                         //선지형
+                        const blankWords = testSentences[count-testWords.length]['문장 빈칸'].match(/\[([^\[\]]+)\]/g);
+                        const randomWordBracket = blankWords[Math.floor(Math.random() * blankWords.length)];
+                        const regex = new RegExp(`(${randomWordBracket.replace(/([\[\]])/g, '\\$1')})`);
+                        const randomWord = randomWordBracket.replace(/([\[\]])/g, '');
+                        const optionWords = [];
+                        
+                        for (const [index, row] of course.entries()){
+                            const prev = course[index-1] || row;
+                            if((row['단원'] != stepName.split('-')[0] || row['단계'] != stepName.split('-')[1]) &&
+                            prev['단원'] == stepName.split('-')[0] && prev['단계'] == stepName.split('-')[1]) break;
+                            if(row['단어'] != randomWord){
+                                optionWords.push(row['단어']);
+                            }
+                        }
+                        
+                        optionWords.push(randomWord);
+                        
+                        setBlankSentence(testSentences[count-testWords.length]['문장 빈칸'].replace(regex, '<span class="blank">$1</span>').replace(/\[([^\[\]]+)\]/g, '$1'));
+                        setOptions(optionWords.sort(() => Math.random() - 0.5).slice(0, 3));
+                        setAnswer(randomWord);
                         setType('도착어 단어 선지형');
                     }
                     else{
@@ -449,6 +479,19 @@ function Test(){
                         <div id="meaning">{testSentences[count-testWords.length]['문장 뜻']}</div>
                     </div>
                     <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)}></textarea>
+                    </>
+                }
+                {type == '도착어 단어 선지형' &&
+                    <>
+                    <div id="static-card" className={`${next ? 'reveal' : ''}`}>
+                        <div id="sentence" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
+                        <div id="meaning">{testSentences[count-testWords.length]['문장 뜻']}</div>
+                    </div>
+                    <div id="option-container">
+                        {options.map(el =>
+                            <div key={el} className={`option${el == input ? ' selected' : ''}${el == answer ? ' correct' : ''}`} onClick={() => setInput(el)}>{el}</div>
+                        )}
+                    </div>
                     </>
                 }
                 {type == '출발어 문장 서답형' &&
