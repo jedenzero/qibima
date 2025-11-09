@@ -457,7 +457,7 @@ function Test(){
                         let piecesTemp = testSentences[count-testWords.length]['문장 뜻 분해'].split('|');
 
                         setAnswer(piecesTemp);
-                        setPieces(piecesTemp.sort(() => Math.random() - 0.5));
+                        setPieces([...piecesTemp].sort(() => Math.random() - 0.5));
                         setPassageContent(UI['make-sentence-start']);
                         setType('출발어 문장 조합형');
                     }
@@ -475,7 +475,7 @@ function Test(){
                          let piecesTemp = testSentences[count-testWords.length]['문장 분해'].split('|');
 
                         setAnswer(piecesTemp);
-                        setPieces(piecesTemp.sort(() => Math.random() - 0.5));
+                        setPieces([...piecesTemp].sort(() => Math.random() - 0.5));
                         setPassageContent(UI['make-sentence-target']);
                         setType('도착어 문장 조합형');
                     }
