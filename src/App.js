@@ -490,6 +490,7 @@ function Test(){
     
     useEffect(() => {
         setInput('');
+        setInputs([]);
     }, [count]);
     
     return(
@@ -598,7 +599,7 @@ function Test(){
                         </div>
                         <div id="input-container">
                             {inputs.map((row, index) =>
-                                <span key={row[0]} className={`piece${next == true ? isCorrectArr[index] == true ? 'correct' : ' incorrect' : ''}`}>{row[1]}</span>
+                                <span key={row[0]} className={`${next == true ? isCorrectArr[index] == true ? 'correct' : ' incorrect' : ''}`}>{row[1]}</span>
                             )}
                         </div>
                     </div>
