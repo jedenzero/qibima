@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, createContext, useContext, useMemo, useCallback, useLocation } from "react";
-import { Routes, Route, Link, useParams, Navigate, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef, createContext, useContext, useMemo, useCallback } from "react";
+import { Routes, Route, Link, useParams, Navigate, useNavigate, useLocation } from "react-router-dom";
 import MarkdownIt from "markdown-it";
 import markdownItFootnote from "markdown-it-footnote";
 import markdownItMultimdTable from "markdown-it-multimd-table";
@@ -389,8 +389,8 @@ function Test(){
         if(count < testWords.length){
             setPassageContent(UI['memo-word']);
         }
-        else if(count >= testWords.length && count < testWords.length + testSentences.length){
-            const randomRange = Math.floor(Math.random() * 15);
+        else if(count < testWords.length + testSentences.length){
+            const randomRange = Math.floor(Math.random() * (testWords.length + testSentences.length));
             const randomLanguage = Math.floor(Math.random() * 3);
             const randomType = Math.floor(Math.random() * 2);
             
@@ -525,7 +525,7 @@ function Test(){
                         <div id="option-container"></div>
                     </>
                 }
-                {type == '출발어 단어 단답형' &&
+                {count < testWords.length + testSentences.length && type == '출발어 단어 단답형' &&
                     <>
                     <div id="static-card" className={`${next ? 'reveal' : ''}`}>
                         <div id="sentence">{testSentences[count-testWords.length]['문장']}</div>
@@ -534,7 +534,7 @@ function Test(){
                     <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)} readOnly={next}></textarea>
                     </>
                 }
-                {type == '도착어 단어 단답형' &&
+                {count < testWords.length + testSentences.length && type == '도착어 단어 단답형' &&
                     <>
                     <div id="static-card" className={`${next ? 'reveal' : ''}`}>
                         <div id="sentence" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
@@ -543,7 +543,7 @@ function Test(){
                     <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)} readOnly={next}></textarea>
                     </>
                 }
-                {type == '도착어 단어 선지형' &&
+                {count < testWords.length + testSentences.length && type == '도착어 단어 선지형' &&
                     <>
                     <div id="static-card" className={`${next ? 'reveal' : ''}`}>
                         <div id="sentence" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
@@ -556,7 +556,7 @@ function Test(){
                     </div>
                     </>
                 }
-                {type == '출발어 문장 서답형' &&
+                {count < testWords.length + testSentences.length && type == '출발어 문장 서답형' &&
                     <>
                     <div id="static-card" className={`${next ? 'reveal' : ''}`}>
                         <div id="sentence">{testSentences[count-testWords.length]['문장']}</div>
@@ -565,7 +565,7 @@ function Test(){
                     <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)} readOnly={next}></textarea>
                     </>
                 }
-                {type == '도착어 문장 서답형' &&
+                {count < testWords.length + testSentences.length && type == '도착어 문장 서답형' &&
                     <>
                     <div id="static-card" className={`${next ? 'reveal' : ''}`}>
                         <div id="sentence"><span className="blank">{testSentences[count-testWords.length]['문장']}</span></div>
@@ -574,7 +574,7 @@ function Test(){
                     <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)} readOnly={next}></textarea>
                     </>
                 }
-                {type == '출발어 문장 조합형' &&
+                {count < testWords.length + testSentences.length && type == '출발어 문장 조합형' &&
                     <>
                     <div id="card-container">
                         <div id="variable-card">
@@ -603,7 +603,7 @@ function Test(){
                     </div>
                     </>
                 }
-                {type == '도착어 문장 조합형' &&
+                {count < testWords.length + testSentences.length && type == '도착어 문장 조합형' &&
                     <>
                     <div id="card-container">
                         <div id="variable-card">
@@ -652,6 +652,9 @@ function Result(){
         <>
             <div id="sub-header">
                 <div id="header-text">{stepName}</div>
+            </div>
+            <div id="progress-bar">
+                <div id="progress-bar-fill" style={{width: '100%'}}></div>
             </div>
             <div id="passage">{UI['check-result']}</div>
             <div id="score-container">{score}%</div>
