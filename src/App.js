@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, createContext, useContext, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useRef, createContext, useContext, useMemo, useCallback, useLocation } from "react";
 import { Routes, Route, Link, useParams, Navigate, useNavigate } from "react-router-dom";
 import MarkdownIt from "markdown-it";
 import markdownItFootnote from "markdown-it-footnote";
@@ -92,6 +92,14 @@ export default function App() {
                     element={
                         currentCourse && course
                         ? <Test />
+                        : <Navigate to="/" replace />
+                    }
+                />
+                <Route
+                    path="/:courseCode/:stepName/result"
+                    element={
+                        currentCourse && course
+                        ? <Result />
                         : <Navigate to="/" replace />
                     }
                 />
@@ -328,6 +336,10 @@ function Test(){
             
             setIsCorrect(isCorrectTemp);
             setIsCorrectArr(arrTemp);
+            
+            if(isCorrect){
+                setCorrect(prev => prev+1);
+            }
         }
     }
     
@@ -477,7 +489,7 @@ function Test(){
             }
         }
         else{
-            
+            navigate(`/${courseCode}/${stepName}/result`, { state: { score: Math.floor(correct / testSentences.length * 100) } });
         }
     }, [count, testWords, testSentences]);
     
@@ -623,6 +635,28 @@ function Test(){
                 <div id="foot-button-container">
                     <div id="foot-button" onClick={() => {if(count == null) return; if(count < testWords.length){setCount(prev => prev+1)}else{if(next){setCount(prev => prev+1); setNext(false)}else{check(); setNext(true)}}}}>{footButtonContent}</div>
                 </div>
+            </div>
+        </>
+    );
+}
+
+function Result(){
+    const navigate = useNavigate();
+    const { courseCode, stepName } = useParams();
+    const { currentCourse, courseInfo, course, storageData } = useContext(Context);
+    const { state } = useLocation();
+    const score = state?.score ?? 0;
+    const UI = courseInfo['UI'] ? JSON.parse(courseInfo['UI']) : {};
+    
+    return(
+        <>
+            <div id="sub-header">
+                <div id="header-text">{stepName}</div>
+            </div>
+            <div id="passage">{UI['check-result']}</div>
+            <div id="score-container">{score}%</div>
+            <div id="foot-button-container">
+                <div id="foot-button" onClick={() => {navigate(`/${courseCode}`)}}>{UI['finish']}</div>
             </div>
         </>
     );
