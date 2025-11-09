@@ -575,7 +575,7 @@ function Test(){
                     </div>
                     <div id="piece-container">
                         {pieces.map((el, index) =>
-                            <span key={index} className={`piece${inputs.some(row => row[0] == index) ? ' selected': ''}`} 
+                            <div key={index} className={`piece${inputs.some(row => row[0] == index) ? ' selected': ''}`} 
                                 onClick={() => {
                                 if(next == true) return;
                                 if(inputs.some(row => row[0] == index)){
@@ -585,7 +585,7 @@ function Test(){
                                     setInputs(prev => [...prev, [index, el]]);
                                 }
                                 }}>{el}
-                            </span>
+                            </div>
                         )}
                     </div>
                     </>
@@ -604,7 +604,7 @@ function Test(){
                     </div>
                     <div id="piece-container">
                         {pieces.map((el, index) =>
-                            <span key={index} className={`piece${inputs.some(row => row[0] == index) ? ' selected': ''}`} 
+                            <div key={index} className={`piece${inputs.some(row => row[0] == index) ? ' selected': ''}`} 
                                 onClick={() => {
                                 if(next == true) return;
                                 if(inputs.some(row => row[0] == index)){
@@ -614,7 +614,7 @@ function Test(){
                                     setInputs(prev => [...prev, [index, el]]);
                                 }
                                 }}>{el}
-                            </span>
+                            </div>
                         )}
                     </div>
                     </>
