@@ -244,7 +244,13 @@ body{
 }
 
 #input-container span{
+    padding: 0 2px;
     border-bottom: 1px solid #CFD8DC;
+}
+
+#input-container span.correct{
+    border-bottom: 1px solid #69F0AE;
+    color: #1B5E20;
 }
 
 #piece-container{
@@ -254,7 +260,7 @@ body{
     align-content: flex-start;
     flex-wrap: wrap;
     margin: 25px 0;
-    height: 100px;
+    height: 150px;
 }
 
 .piece{
