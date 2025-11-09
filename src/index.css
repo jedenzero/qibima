@@ -238,6 +238,8 @@ body{
 }
 
 #input-container{
+    display: flex;
+    gap: 15px;
     margin-top: 25px;
 }
 
