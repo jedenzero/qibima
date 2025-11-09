@@ -656,10 +656,12 @@ function Result(){
             <div id="progress-bar">
                 <div id="progress-bar-fill" style={{width: '100%'}}></div>
             </div>
-            <div id="passage">{UI['check-result']}</div>
-            <div id="score-container">{score}%</div>
-            <div id="foot-button-container">
-                <div id="foot-button" onClick={() => {navigate(`/${courseCode}`)}}>{UI['finish']}</div>
+            <div id="content">
+                <div id="passage">{UI['check-result']}</div>
+                <div id="score">{score}%</div>
+                <div id="foot-button-container">
+                    <div id="foot-button" onClick={() => {navigate(`/${courseCode}`)}}>{UI['finish']}</div>
+                </div>
             </div>
         </>
     );
