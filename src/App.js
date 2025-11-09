@@ -377,7 +377,7 @@ function Test(){
         if(count < testWords.length){
             setPassageContent(UI['memo-word']);
         }
-        else{
+        else if(count >= testWords.length && count < testWords.length + testSentences.length){
             const randomRange = Math.floor(Math.random() * 15);
             const randomLanguage = Math.floor(Math.random() * 3);
             const randomType = Math.floor(Math.random() * 2);
@@ -476,6 +476,9 @@ function Test(){
                 }
             }
         }
+        else{
+            
+        }
     }, [count, testWords, testSentences]);
     
     useEffect(() => {
@@ -572,7 +575,7 @@ function Test(){
                     </div>
                     <div id="piece-container">
                         {pieces.map((el, index) =>
-                            <span key={index} className={`${inputs.some(row => row[0] == index) ? 'selected': ''}`} 
+                            <span key={index} className={`piece${inputs.some(row => row[0] == index) ? ' selected': ''}`} 
                                 onClick={() => {
                                 if(next == true) return;
                                 if(inputs.some(row => row[0] == index)){
@@ -595,13 +598,13 @@ function Test(){
                         </div>
                         <div id="input-container">
                             {inputs.map((row, index) =>
-                                <span key={row[0]} className={`${next == true ? isCorrectArr[index] == true ? 'correct' : 'incorrect' : ''}`}>{row[1]}</span>
+                                <span key={row[0]} className={`piece${next == true ? isCorrectArr[index] == true ? 'correct' : ' incorrect' : ''}`}>{row[1]}</span>
                             )}
                         </div>
                     </div>
                     <div id="piece-container">
                         {pieces.map((el, index) =>
-                            <span key={index} className={`${inputs.some(row => row[0] == index) ? 'selected': ''}`} 
+                            <span key={index} className={`piece${inputs.some(row => row[0] == index) ? ' selected': ''}`} 
                                 onClick={() => {
                                 if(next == true) return;
                                 if(inputs.some(row => row[0] == index)){
