@@ -266,6 +266,7 @@ function Test(){
     const [answer, setAnswer] = useState("");
     const [input, setInput] = useState("");
     const [isCorrect, setIsCorrect] = useState(null);
+    const [isCorrectArr, setIsCorrectArr] = useState([]);
     const [correct, setCorrect] = useState(0);
     const [next, setNext] = useState(false);
     const [passageContent, setPassageContent] = useState(null);
@@ -300,6 +301,33 @@ function Test(){
             else{
                 setIsCorrect(false);
             }
+        }
+        if(type == '출발어 문장 조합형' || type == '도착어 문장 조합형'){
+            let isCorrectTemp = true;
+            let arrTemp = [];
+            
+            inputs.forEach((row, index) => {
+                if(answer.length <= index){
+                    isCorrectTemp = false;
+                    arrTemp.push(false);
+                }
+                else{
+                    if(row[1] == answer[index]){
+                        arrTemp.push(true);
+                    }
+                    else{
+                        isCorrectTemp = false;
+                        arrTemp.push(false);
+                    }
+                }
+            });
+            
+            if(inputs.length == 0){
+                isCorrectTemp = false;
+            }
+            
+            setIsCorrect(isCorrectTemp);
+            setIsCorrectArr(arrTemp);
         }
     }
     
@@ -414,17 +442,17 @@ function Test(){
                     //출발어
                     if(randomType == 0){
                         //조합형
-                        let inputsTemp = testSentences[count-testWords.length]['문장 뜻 분해'].split('|');
+                        let piecesTemp = testSentences[count-testWords.length]['문장 뜻 분해'].split('|');
 
-                        setAnswer(testSentences[count-testWords.length]['문장 뜻']);
-                        setInputs(inputsTemp);
-                        setPassageContent(UI['write-sentence']);
+                        setAnswer(piecesTemp);
+                        setPieces(piecesTemp.sort(() => Math.random() - 0.5));
+                        setPassageContent(UI['make-sentence-start']);
                         setType('출발어 문장 조합형');
                     }
                     else{
                         //서답형
                         setAnswer(testSentences[count-testWords.length]['문장 뜻']);
-                        setPassageContent(UI['make-sentence-start']);
+                        setPassageContent(UI['write-sentence']);
                         setType('출발어 문장 서답형');
                     }
                 }
@@ -432,6 +460,10 @@ function Test(){
                     //도착어
                     if(randomType == 0){
                         //조합형
+                         let piecesTemp = testSentences[count-testWords.length]['문장 분해'].split('|');
+
+                        setAnswer(piecesTemp);
+                        setPieces(piecesTemp.sort(() => Math.random() - 0.5));
                         setPassageContent(UI['make-sentence-target']);
                         setType('도착어 문장 조합형');
                     }
@@ -533,8 +565,8 @@ function Test(){
                             {testSentences[count-testWords.length]['문장']}
                         </div>
                         <div id="input-container">
-                            {inputs.map(row =>
-                                <span key={row[0]}>{row[1]}</span>
+                            {inputs.map((row, index) =>
+                                <span key={row[0]} className={`${next == true ? isCorrectArr[index] == true ? 'correct' : 'incorrect' : ''}`}>{row[1]}</span>
                             )}
                         </div>
                     </div>
@@ -542,6 +574,36 @@ function Test(){
                         {pieces.map((el, index) =>
                             <span key={index} className={`${inputs.some(row => row[0] == index) ? 'selected': ''}`} 
                                 onClick={() => {
+                                if(next == true) return;
+                                if(inputs.some(row => row[0] == index)){
+                                    setInputs(prev => prev.filter(row => row[0] != index));
+                                }
+                                else{
+                                    setInputs(prev => [...prev, [index, el]]);
+                                }
+                                }}>{el}
+                            </span>
+                        )}
+                    </div>
+                    </>
+                }
+                {type == '도착어 문장 조합형' &&
+                    <>
+                    <div id="card-container">
+                        <div id="variable-card">
+                            {testSentences[count-testWords.length]['문장 뜻']}
+                        </div>
+                        <div id="input-container">
+                            {inputs.map((row, index) =>
+                                <span key={row[0]} className={`${next == true ? isCorrectArr[index] == true ? 'correct' : 'incorrect' : ''}`}>{row[1]}</span>
+                            )}
+                        </div>
+                    </div>
+                    <div id="piece-container">
+                        {pieces.map((el, index) =>
+                            <span key={index} className={`${inputs.some(row => row[0] == index) ? 'selected': ''}`} 
+                                onClick={() => {
+                                if(next == true) return;
                                 if(inputs.some(row => row[0] == index)){
                                     setInputs(prev => prev.filter(row => row[0] != index));
                                 }
