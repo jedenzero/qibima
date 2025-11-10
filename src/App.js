@@ -284,7 +284,7 @@ function Test(){
     
     function check(){
         if(type == '출발어 단어 단답형' || type == '도착어 단어 단답형'){
-            if(answer.trim() === input.trim()){
+            if(answer.trim().replace(/\([^\(\)]+\)/g, '') === input.trim().replace(/\([^\(\)]+\)/g, '')){
                 setCorrect(prev => prev+1);
                 setIsCorrect(true);
             }
@@ -293,7 +293,7 @@ function Test(){
             }
         }
         if(type == '출발어 문장 서답형' || type == '도착어 문장 서답형'){
-            if(answer.trim().replace(/[\-.,?!:~"'‘’“”«»]/g, '') === input.trim().replace(/[\-.,?!:~"'‘’“”«»]/g, '')){
+            if(answer.trim().replace(/[\-.,?!:~"'‘’“”«»]/g, '').replace(/\([^\(\)]+\)/g, '') === input.trim().replace(/[\-.,?!:~"'‘’“”«»]/g, '').replace(/\([^\(\)]+\)/g, '')){
                 setCorrect(prev => prev+1);
                 setIsCorrect(true);
             }
@@ -531,7 +531,7 @@ function Test(){
                         <div id="sentence">{testSentences[count-testWords.length]['문장']}</div>
                         <div id="meaning" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
                     </div>
-                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)} readOnly={next}></textarea>
+                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)} readOnly={next} spellCheck={false}></textarea>
                     </>
                 }
                 {count < testWords.length + testSentences.length && type == '도착어 단어 단답형' &&
@@ -540,7 +540,7 @@ function Test(){
                         <div id="sentence" dangerouslySetInnerHTML={{ __html: blankSentence }}></div>
                         <div id="meaning">{testSentences[count-testWords.length]['문장 뜻']}</div>
                     </div>
-                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)} readOnly={next}></textarea>
+                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)} readOnly={next} spellCheck={false}></textarea>
                     </>
                 }
                 {count < testWords.length + testSentences.length && type == '도착어 단어 선지형' &&
@@ -562,7 +562,7 @@ function Test(){
                         <div id="sentence">{testSentences[count-testWords.length]['문장']}</div>
                         <div id="meaning"><span className="blank">{testSentences[count-testWords.length]['문장 뜻']}</span></div>
                     </div>
-                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)} readOnly={next}></textarea>
+                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)} readOnly={next} spellCheck={false}></textarea>
                     </>
                 }
                 {count < testWords.length + testSentences.length && type == '도착어 문장 서답형' &&
@@ -571,7 +571,7 @@ function Test(){
                         <div id="sentence"><span className="blank">{testSentences[count-testWords.length]['문장']}</span></div>
                         <div id="meaning">{testSentences[count-testWords.length]['문장 뜻']}</div>
                     </div>
-                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)} readOnly={next}></textarea>
+                    <textarea id="writing-area" ref={areaRef} className={`${next ? isCorrect ? 'correct' : 'incorrect' : ''}`} onChange={(e) => setInput(e.target.value)} readOnly={next} spellCheck={false}></textarea>
                     </>
                 }
                 {count < testWords.length + testSentences.length && type == '출발어 문장 조합형' &&
