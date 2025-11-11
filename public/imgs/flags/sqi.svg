@@ -1,0 +1,20 @@
+<svg viewBox="0 0 3000 2000" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 500C0 223.858 223.858-1.13687e-13 500-1.13687e-13L2500-1.13687e-13C2776.14-1.13687e-13 3000 223.858 3000 500L3000 1500C3000 1776.14 2776.14 2000 2500 2000L500 2000C223.858 2000 0 1776.14 0 1500L0 500Z" fill="#ef5350"/>
+<path d="M1225 650C1169.77 650 1125 694.772 1125 750L1125 1050C1125 1105.23 1169.77 1150 1225 1150L1775 1150C1830.23 1150 1875 1105.23 1875 1050L1875 750C1875 694.772 1830.23 650 1775 650L1750 650C1715.48 650 1687.5 677.982 1687.5 712.5L1687.5 712.5C1687.5 747.018 1659.52 775 1625 775L1375 775C1340.48 775 1312.5 747.018 1312.5 712.5L1312.5 712.5C1312.5 677.982 1284.52 650 1250 650L1225 650Z" fill="#424242"/>
+<path d="M1125 900L875 900" fill="none" opacity="1" stroke="#424242" stroke-linecap="round" stroke-linejoin="round" stroke-width="100"/>
+<path d="M1125 750L875 750" fill="none" opacity="1" stroke="#424242" stroke-linecap="round" stroke-linejoin="round" stroke-width="100"/>
+<path d="M1125 1050L875 1050" fill="none" opacity="1" stroke="#424242" stroke-linecap="round" stroke-linejoin="round" stroke-width="100"/>
+<path d="M2125 900L1875 900" fill="none" opacity="1" stroke="#424242" stroke-linecap="round" stroke-linejoin="round" stroke-width="100"/>
+<path d="M2125 750L1875 750" fill="none" opacity="1" stroke="#424242" stroke-linecap="round" stroke-linejoin="round" stroke-width="100"/>
+<path d="M2125 1050L1875 1050" fill="none" opacity="1" stroke="#424242" stroke-linecap="round" stroke-linejoin="round" stroke-width="100"/>
+<path d="M1850 1325L1550 1025" fill="none" opacity="1" stroke="#424242" stroke-linecap="round" stroke-linejoin="round" stroke-width="100"/>
+<path d="M1150 1325L1450 1025" fill="none" opacity="1" stroke="#424242" stroke-linecap="round" stroke-linejoin="round" stroke-width="100"/>
+<path d="M1250 1425L1400 1275" fill="none" opacity="1" stroke="#424242" stroke-linecap="round" stroke-linejoin="round" stroke-width="100"/>
+<path d="M1750 1425L1600 1275" fill="none" opacity="1" stroke="#424242" stroke-linecap="round" stroke-linejoin="round" stroke-width="100"/>
+<path d="M1650 550L1550 800" fill="none" opacity="1" stroke="#424242" stroke-linecap="round" stroke-linejoin="round" stroke-width="100"/>
+<path d="M1350 550L1450 800" fill="none" opacity="1" stroke="#424242" stroke-linecap="round" stroke-linejoin="round" stroke-width="100"/>
+<path d="M1429.29 1220.71C1468.34 1181.66 1531.66 1181.66 1570.71 1220.71L1629.29 1279.29C1668.34 1318.34 1668.34 1381.66 1629.29 1420.71L1570.71 1479.29C1531.66 1518.34 1468.34 1518.34 1429.29 1479.29L1370.71 1420.71C1331.66 1381.66 1331.66 1318.34 1370.71 1279.29L1429.29 1220.71Z" fill="#424242"/>
+<path d="M1400 900L1600 900L1600 1400L1400 1400L1400 900Z" fill="#424242"/>
+<path d="M1200 500C1200 472.386 1222.39 450 1250 450L1400 450C1427.61 450 1450 472.386 1450 500L1450 550C1450 577.614 1427.61 600 1400 600L1250 600C1222.39 600 1200 577.614 1200 550L1200 500Z" fill="#424242"/>
+<path d="M1550 500C1550 472.386 1572.39 450 1600 450L1750 450C1777.61 450 1800 472.386 1800 500L1800 550C1800 577.614 1777.61 600 1750 600L1600 600C1572.39 600 1550 577.614 1550 550L1550 500Z" fill="#424242"/>
+</svg>
